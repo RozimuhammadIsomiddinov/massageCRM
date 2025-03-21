@@ -1,15 +1,16 @@
 require("dotenv").config();
 
 const { DB_PASSWORD, DB_NAME, DB_HOST, DB_USERNAME } = process.env;
+
 module.exports = {
   client: "pg",
   connection: {
-    host: DB_HOST, // PostgreSQL serveri
-    user: DB_USERNAME, // PostgreSQL foydalanuvchisi
-    password: DB_PASSWORD, // PostgreSQL paroli
-    database: DB_NAME, // PostgreSQL bazasi
+    host: DB_HOST,
+    user: DB_USERNAME,
+    password: DB_PASSWORD,
+    database: DB_NAME,
   },
   migrations: {
-    directory: "./migrations", // Migration fayllari joylashgan papka
+    directory: "./migrations",
   },
 };

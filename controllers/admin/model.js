@@ -28,6 +28,7 @@ const createOperatorQuery = `
     VALUES(?,?,?)
     RETURNING *;
 `;
+
 const selectByName = async (login) => {
   try {
     const res = await knex.raw(selectBy, [login]);
@@ -37,7 +38,7 @@ const selectByName = async (login) => {
   }
 };
 
-const selectByID = async (id) => {
+const selectByID_admin = async (id) => {
   try {
     const res = await knex.raw(selectByIDQuery, [id]);
     return res.rows;
@@ -83,4 +84,4 @@ const createOperator = async (admin_id, login, password) => {
 };
 createAdmin();
 
-module.exports = { selectByName, selectByID, createOperator };
+module.exports = { selectByName, selectByID_admin, createOperator };
