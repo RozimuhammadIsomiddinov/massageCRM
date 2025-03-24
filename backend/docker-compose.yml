@@ -1,0 +1,30 @@
+version: "3"
+services:
+  app:
+    build: .
+    image: massage:latest
+    container_name: app
+    ports:
+      - "3000:3001"
+    environment:
+      - TZ=Europe/Moscow
+    depends_on:
+      - db
+    networks:
+      - massage
+
+  db:
+    image: postgres:17
+    container_name: db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 4961025Ir
+      POSTGRES_DB: massage
+    ports:
+      - "5432:5432"
+    networks:
+      - massage
+
+networks:
+  massage:
+    driver: bridge
