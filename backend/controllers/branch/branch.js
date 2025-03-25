@@ -12,7 +12,7 @@ const getAllBranch = async (req, res) => {
     const result = await selectAll();
     if (!result) return res.status(404).json({ message: "branch hasn't yet" });
 
-    return res.status(200).json({ result });
+    return res.status(200).json(result);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -23,47 +23,48 @@ const getByIDBranch = async (req, res) => {
   if (!id) return res.status(400).json({ message: "send an id" });
   try {
     const result = await selectByID_branch(id);
-    if (!result) return res.status(404).json({ message: `${id} hasn't yet` });
-
-    return res.status(200).json({ result });
+    /* if (result.length == 0)
+      return res.status(404).json({ message: `${id} hasn't yet` });
+ */
+    return res.status(200).json(result);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 };
 
-const postBranchCont = async (req, res) => {
-  const { name, super_id } = req.body;
+const createBranchCont = async (req, res) => {
+  const { name } = req.body;
 
-  if (!name || !super_id)
-    return res.status(400).json({ message: "fill all fields" });
+  if (!name) return res.status(400).json({ message: "fill brach_name" });
   try {
-    const result1 = await selectByID(super_id);
+    /*  const result1 = await selectByID(super_id);
     if (!result1)
       return res.status(400).json({ message: "super_admin not found" });
-
+ */
     const result = await createBranch(name);
     if (!result) return res.status(404).json({ message: "not saved" });
 
-    return res.status(201).json({ message: "successfully", result });
+    return res.status(201).json(result);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
 };
 
-const putBranchCont = async (req, res) => {
-  const { name, super_id } = req.body;
-  if (!name || !super_id)
-    return res.status(400).json({ message: "fill all fields" });
+const updateBranchCont = async (req, res) => {
+  const { id } = req.params;
+  const { name } = req.body;
+  if (!name || !id) return res.status(400).json({ message: "fill all fields" });
 
   try {
-    const result1 = await selectByID(super_id);
-    if (!result1)
-      return res.status(400).json({ message: "super_admin not found" });
+    const result1 = await selectByID_branch(id);
+    if (result1.length == 0)
+      return res.status(404).json({ message: "NOT FOUND" });
 
-    const result = await updateBranch(name);
-    if (!result) return res.status(404).json({ message: "not updated" });
+    const result = await updateBranch(id, name);
+    if (result.length == 0)
+      return res.status(404).json({ message: "not updated" });
 
-    return res.status(201).json({ message: "successfully", result });
+    return res.status(200).json(result);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -74,7 +75,8 @@ const deleteBranchCont = async (req, res) => {
   if (!id) return res.status(400).json({ message: "send an id" });
   try {
     const result1 = await selectByID_branch(id);
-    if (!result1) return res.status(404).json({ message: "already deleted" });
+    if (result1.length == 0)
+      return res.status(404).json({ message: "NOT FOUND" });
 
     const result = await deleteBranch(id);
     return res.status(200).json({ message: "succesfully" });
@@ -86,7 +88,7 @@ const deleteBranchCont = async (req, res) => {
 module.exports = {
   getAllBranch,
   getByIDBranch,
-  postBranchCont,
-  putBranchCont,
+  createBranchCont,
+  updateBranchCont,
   deleteBranchCont,
 };

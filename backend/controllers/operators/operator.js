@@ -1,6 +1,7 @@
 const { compare } = require("bcryptjs");
-const { selectByName } = require("./model");
+const { selectByName, dailyAmount } = require("./model");
 const { generateJWT } = require("../../config/functions");
+
 const loginCont = async (req, res) => {
   const { login, password } = req.body;
   try {
@@ -23,4 +24,14 @@ const loginCont = async (req, res) => {
   }
 };
 
-module.exports = { loginCont };
+const dailyAmountCont = async (req, res) => {
+  try {
+    const result = await dailyAmount();
+    return res.status(200).json(result);
+  } catch (e) {
+    res
+      .status(500)
+      .json({ message: "error from dailyAmountCont", error: e.message });
+  }
+};
+module.exports = { loginCont, dailyAmountCont };

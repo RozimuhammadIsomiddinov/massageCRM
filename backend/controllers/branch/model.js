@@ -12,16 +12,17 @@ const selectByIDQuery = `
 
 const createBranchQuery = `
         INSERT INTO branch(
-        name ,
+        name 
         )
-        VALUES(?)
+        VALUES (?)
         RETURNING *;
 `;
 
 const updateBranchQuery = ` 
         UPDATE  branch
             SET 
-                name = ?
+                name = ?,
+                updated_at = NOW()
             WHERE id = ?
             RETURNING *;
 `;
@@ -36,6 +37,7 @@ const selectAll = async () => {
     return res.rows;
   } catch (e) {
     console.log("error from selectALl" + e.message);
+    throw e;
   }
 };
 
@@ -45,6 +47,7 @@ const selectByID_branch = async (id) => {
     return res.rows;
   } catch (e) {
     console.log("error from selectById" + e.message);
+    throw e;
   }
 };
 
@@ -54,6 +57,7 @@ const createBranch = async (name) => {
     return res.rows;
   } catch (e) {
     console.log("Xatolik createBranch: " + e.message);
+    throw e;
   }
 };
 
@@ -63,6 +67,7 @@ const updateBranch = async (id, name) => {
     return res.rows;
   } catch (e) {
     console.log("error from updateBranch" + e.message);
+    throw e;
   }
 };
 
@@ -72,6 +77,7 @@ const deleteBranch = async (id) => {
     return res.rows;
   } catch (e) {
     console.log("error from deleteBranch" + e.message);
+    throw e;
   }
 };
 

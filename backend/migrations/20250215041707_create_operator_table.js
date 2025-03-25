@@ -6,6 +6,7 @@ exports.up = function (knex) {
       admin_id INTEGER REFERENCES admin(id) ON DELETE CASCADE,
       login VARCHAR(255),
       password VARCHAR(255),
+      role VARCHAR(20) DEFAULT 'operator',
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );

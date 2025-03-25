@@ -22,10 +22,11 @@ const createadminQuery = `
 const createOperatorQuery = `
     INSERT INTO operator(
     admin_id,
+    branch_id,
     login,
     password
     )
-    VALUES(?,?,?)
+    VALUES(?,?,?,?)
     RETURNING *;
 `;
 
@@ -35,6 +36,7 @@ const selectByName = async (login) => {
     return res.rows;
   } catch (e) {
     console.log("error from selectByName\t" + e.message);
+    throw e;
   }
 };
 
@@ -44,6 +46,7 @@ const selectByID_admin = async (id) => {
     return res.rows;
   } catch (e) {
     console.log("error from selectByID" + e.message);
+    throw e;
   }
 };
 
@@ -64,22 +67,25 @@ const createAdmin = async () => {
     await knex.raw(createadminQuery, [NAME, hashedPassword]);
   } catch (e) {
     console.log("Xatolik createAdmin: " + e.message);
+    throw e;
   }
 };
 
 //create operator by admin
-const createOperator = async (admin_id, login, password) => {
+const createOperator = async (admin_id, branch_id, login, password) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const res = await knex.raw(createOperatorQuery, [
       admin_id,
+      branch_id,
       login,
       hashedPassword,
     ]);
     return res.rows;
   } catch (e) {
     console.log("Xatolik createOperator: " + e.message);
+    throw e;
   }
 };
 /* createAdmin();
