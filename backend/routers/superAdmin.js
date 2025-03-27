@@ -117,10 +117,10 @@ const router = express.Router();
  *             properties:
  *               from:
  *                 type: string
- *                 format: date
+ *                 format: date-time
  *               to:
  *                 type: string
- *                 format: date
+ *                 format: date-time
  *     responses:
  *       200:
  *         description: Filtered admin list
@@ -146,10 +146,10 @@ const router = express.Router();
  *             properties:
  *               from:
  *                 type: string
- *                 format: date
+ *                 format: date-time
  *               to:
  *                 type: string
- *                 format: date
+ *                 format: date-time
  *     responses:
  *       200:
  *         description: Filtered operator list
