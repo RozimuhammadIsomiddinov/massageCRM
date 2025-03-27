@@ -18,7 +18,7 @@ const loginCont = async (req, res) => {
     const token = generateJWT(result1[0]);
     res.status(200).json({
       token,
-      admin_name: result1[0].login,
+      result: result1[0],
     });
   } catch (e) {
     res.status(500).json({ error: e.message });

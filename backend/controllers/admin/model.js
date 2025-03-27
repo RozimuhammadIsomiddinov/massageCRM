@@ -7,7 +7,17 @@ const selectByIDQuery = `
         SELECT *FROM admin WHERE id = ?;
 `;
 const selectBy = `
-        SELECT *FROM admin WHERE login = ?;
+        SELECT 
+        a.id,
+        a.login,
+        b.name AS branch_name,
+        a.role,
+        a.password,
+        a.created_at,
+        a.updated_at
+        FROM admin AS a 
+        JOIN branch AS b ON a.branch_id = b.id
+        WHERE login = ?
 `;
 
 const createadminQuery = `

@@ -7,8 +7,78 @@ const {
   selectOperatorCont,
   selectAdminFilterCont,
   selectOperatorFilterCont,
+  loginCont,
 } = require("../controllers/super_admin/super_admin");
 const router = express.Router();
+
+/**
+ * @swagger
+ * /super-admin/login:
+ *   post:
+ *     summary: Super Admin login
+ *     tags: [SuperAdmin]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - login
+ *               - password
+ *             properties:
+ *               login:
+ *                 type: string
+ *                 description: Super admin login username
+ *                 example: superadmin1
+ *               password:
+ *                 type: string
+ *                 description: Super admin password
+ *                 example: superSecurePass!
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: JWT token for authenticated super admin
+ *                 super_admin:
+ *                   type: string
+ *                   description: Super admin username
+ *       401:
+ *         description: Incorrect password
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: parol is incorrect
+ *       404:
+ *         description: Super admin not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: super_admin not found
+ *       500:
+ *         description: Server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ */
 
 /**
  * @swagger
@@ -237,6 +307,7 @@ router.get("/operator", selectOperatorCont);
 router.post("/admin-filter", selectAdminFilterCont);
 router.post("/operator-filter", selectOperatorFilterCont);
 
+router.post("/login", loginCont);
 router.post("/create-admin", createAdminCont);
 router.post("/create-operator", createOperatorCont);
 

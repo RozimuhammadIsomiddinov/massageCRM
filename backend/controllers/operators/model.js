@@ -6,7 +6,18 @@ const selectByIDQuery = `
 `;
 
 const selectBy = `
-        SELECT *FROM operator WHERE login = ?;
+  SELECT 
+    o.id,
+    o.login,
+    o.password,
+    branch.name AS branch_name,
+    admin.login AS admin_name,
+    o.created_at,
+    o.updated_at
+  FROM operator AS o
+  JOIN branch ON o.branch_id = branch.id
+  JOIN admin ON o.admin_id = admin.id
+  WHERE o.login = ?;
 `;
 
 const dailyAmountQuery = `
