@@ -234,8 +234,8 @@ const createSuperAdmin = async () => {
   }
 };
 
-createSuperAdmin();
-
+/* createSuperAdmin();
+ */
 module.exports = {
   selectByID,
   selectByLogin,
