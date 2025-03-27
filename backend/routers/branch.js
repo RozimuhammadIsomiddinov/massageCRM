@@ -12,7 +12,6 @@ const router = express.Router();
  * @swagger
  * tags:
  *   name: Branch
- *   description: Branch management
  */
 
 /**

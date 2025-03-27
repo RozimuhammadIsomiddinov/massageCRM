@@ -26,7 +26,7 @@ const getByIDBranch = async (req, res) => {
     /* if (result.length == 0)
       return res.status(404).json({ message: `${id} hasn't yet` });
  */
-    return res.status(200).json(result);
+    return res.status(200).json(result[0]);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -44,7 +44,7 @@ const createBranchCont = async (req, res) => {
     const result = await createBranch(name);
     if (!result) return res.status(404).json({ message: "not saved" });
 
-    return res.status(201).json(result);
+    return res.status(201).json(result[0]);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -64,7 +64,7 @@ const updateBranchCont = async (req, res) => {
     if (result.length == 0)
       return res.status(404).json({ message: "not updated" });
 
-    return res.status(200).json(result);
+    return res.status(200).json(result[0]);
   } catch (e) {
     res.status(500).json({ error: e.message });
   }
@@ -78,7 +78,7 @@ const deleteBranchCont = async (req, res) => {
     if (result1.length == 0)
       return res.status(404).json({ message: "NOT FOUND" });
 
-    const result = await deleteBranch(id);
+    await deleteBranch(id);
     return res.status(200).json({ message: "succesfully" });
   } catch (e) {
     res.status(500).json({ error: e.message });

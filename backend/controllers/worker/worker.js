@@ -1,8 +1,24 @@
+const { selectByID_branch } = require("../branch/model");
+const { selectByIDOperator } = require("../operators/model");
 const { createWorker, updateWorker, deleteWorker } = require("./model");
 
 const createWorkerCont = async (req, res) => {
+  const { branch_id, operator_id, name } = req.body;
+
+  if (!branch_id || !operator_id || !name) {
+    return res.status(400).json({ message: "fill all fields" });
+  }
+
   try {
-    const result = await createWorker(req.body);
+    const result1 = await selectByID_branch(branch_id);
+    if (result1.length == 0)
+      return res.status(404).json({ message: "branch not found" });
+
+    const result2 = await selectByIDOperator(operator_id);
+    if (result2.length == 0)
+      return res.status(404).json({ message: "operator not found" });
+
+    const result = await createWorker({ branch_id, operator_id, name });
     return res.status(201).json(result[0]);
   } catch (e) {
     res
@@ -10,10 +26,25 @@ const createWorkerCont = async (req, res) => {
       .json({ message: "error from createWorkerCont", error: e.message });
   }
 };
+
 const updateWorkerCont = async (req, res) => {
   const { id } = req.params;
+  const { branch_id, operator_id, name } = req.body;
+
+  if (!branch_id || !operator_id || !name) {
+    return res.status(400).json({ message: "fill all fields" });
+  }
+
   try {
-    const result = await updateWorker(req.body, id);
+    const result1 = await selectByID_branch(branch_id);
+    if (result1.length == 0)
+      return res.status(404).json({ message: "branch not found" });
+
+    const result2 = await selectByIDOperator(operator_id);
+    if (result2.length == 0)
+      return res.status(404).json({ message: "operator not found" });
+
+    const result = await updateWorker({ branch_id, operator_id, name }, id);
     return res.status(200).json(result[0]);
   } catch (e) {
     res
