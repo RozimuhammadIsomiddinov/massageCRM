@@ -18,7 +18,8 @@ exports.up = function (knex) {
       description VARCHAR(255), 
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-  );`);
+  );
+`);
 };
 
 /**
