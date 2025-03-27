@@ -77,7 +77,7 @@ const router = express.Router();
  *         required: true
  *         schema:
  *           type: string
- *         description: Prolongation value
+ *         example: "10:10:05"
  *     responses:
  *       200:
  *         description: Offer updated successfully
