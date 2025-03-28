@@ -23,7 +23,7 @@ const createOfferCont = async (req, res) => {
       client_name,
       description
     );
-    return res.status(201).json(result);
+    return res.status(201).json(result[0]);
   } catch (e) {
     res
       .status(500)
@@ -36,7 +36,7 @@ const updateOfferCont = async (req, res) => {
   const { prolongation } = req.query;
   try {
     const result = await updateOffer(id, prolongation);
-    return res.status(200).json(result);
+    return res.status(200).json(result[0]);
   } catch (e) {
     res
       .status(500)

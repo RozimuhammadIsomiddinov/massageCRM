@@ -1,7 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
-
+const path = require("path");
+const fs = require("fs");
 const superAdminRouter = require("./routers/superAdmin");
 const adminRouter = require("./routers/admin");
 const operatorRouter = require("./routers/operator");
@@ -29,7 +30,7 @@ const options = {
     info: {
       title: "MassageCRM API",
       version: "1.0.0",
-      description: "This is the API documentation for CreditSale.",
+      description: "This is the API documentation for MassageCRM.",
     },
     servers: [
       {
@@ -41,6 +42,20 @@ const options = {
 };
 
 const specs = swaggerJsdoc(options);
+
+const publicFolderPath = path.join(__dirname, "public");
+const imagesFolderPath = path.join(publicFolderPath, "images");
+
+if (!fs.existsSync(publicFolderPath)) {
+  fs.mkdirSync(publicFolderPath);
+  console.info("Public folder created successfully.");
+}
+if (!fs.existsSync(imagesFolderPath)) {
+  fs.mkdirSync(imagesFolderPath);
+  console.info("Images folder created successfully.");
+}
+
+app.use("/public", express.static(path.join(__dirname, "public")));
 
 app.use("/super-admin", superAdminRouter);
 app.use("/admin", adminRouter);

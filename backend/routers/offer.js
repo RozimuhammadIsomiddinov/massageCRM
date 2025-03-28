@@ -4,6 +4,12 @@ const {
   deleteOfferCont,
   updateOfferCont,
 } = require("../controllers/offer/offer");
+const upload = require("../middleware/multer");
+const {
+  createFileCont,
+  selectFileCont,
+  updateFileCont,
+} = require("../controllers/file/file");
 
 const router = express.Router();
 /**
@@ -107,6 +113,93 @@ const router = express.Router();
  *         description: Server error
  */
 
+/**
+ * @swagger
+ * /offer/file/{id}:
+ *   get:
+ *     summary: Get all files (or by offer_id if added)
+ *     tags: [Upload]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: File ID
+ *     responses:
+ *       200:
+ *         description: Files retrieved successfully
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /offer/create-file/{offer_id}:
+ *   post:
+ *     summary: Upload a file and associate it with an offer
+ *     tags: [Upload]
+ *     parameters:
+ *       - in: path
+ *         name: offer_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Offer ID to associate with the uploaded file
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       201:
+ *         description: File uploaded successfully
+ *       400:
+ *         description: File not uploaded
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
+ * /offer/update-file/{id}:
+ *   put:
+ *     summary: Update an uploaded file
+ *     tags: [Upload]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: File record ID to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               file:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: File updated successfully
+ *       400:
+ *         description: No file uploaded
+ *       500:
+ *         description: Server error
+ */
+
+router.get("/file/:id", selectFileCont);
+router.post("/create-file/:offer_id", upload.single("file"), createFileCont);
+router.put("/update-file/:id", upload.single("file"), updateFileCont);
 router.post("/create", createOfferCont);
 router.put("/update/:id", updateOfferCont);
 router.delete("/delete/:id", deleteOfferCont);
