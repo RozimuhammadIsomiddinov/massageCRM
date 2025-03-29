@@ -23,6 +23,7 @@ app.use(
 
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+const { allLoginCont } = require("./controllers/admin/admin");
 
 const options = {
   definition: {
@@ -56,6 +57,8 @@ if (!fs.existsSync(imagesFolderPath)) {
 }
 
 app.use("/public", express.static(path.join(__dirname, "public")));
+
+app.post("/all-login", allLoginCont);
 
 app.use("/super-admin", superAdminRouter);
 app.use("/admin", adminRouter);

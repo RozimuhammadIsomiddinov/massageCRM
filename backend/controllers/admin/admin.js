@@ -2,6 +2,8 @@ const { compare } = require("bcryptjs");
 
 const { selectByName } = require("./model");
 const { generateJWT } = require("../../config/functions");
+const { selectByLogin } = require("../super_admin/model");
+const { selectByNameOperator } = require("../operators/model");
 
 const loginCont = async (req, res) => {
   const { login, password } = req.body;
@@ -25,4 +27,27 @@ const loginCont = async (req, res) => {
   }
 };
 
-module.exports = { loginCont };
+const allLoginCont = async (req, res) => {
+  const { login, password } = req.body;
+  try {
+    const result1 = await selectByLogin(login); //super_admin
+    const result2 = await selectByName(login); //admin
+    const result3 = await selectByNameOperator(login); //operator
+
+    const user = result1[0] || result2[0] || result3[0];
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const isMatch = await compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: "parol is incorrect" });
+    }
+    const token = generateJWT(user);
+    return res.status(200).json({ token, result: user });
+  } catch (e) {
+    res
+      .status(500)
+      .json({ message: "error from allLoginCont", error: e.message });
+  }
+};
+module.exports = { loginCont, allLoginCont };

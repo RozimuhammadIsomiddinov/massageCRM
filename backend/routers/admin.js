@@ -14,7 +14,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /admin/login:
+ * /all-login:
  *   post:
  *     summary: Admin login
  *     tags: [Admin]
@@ -30,7 +30,7 @@ const router = express.Router();
  *             properties:
  *               login:
  *                 type: string
- *                 description: Admin's login username
+ *                 description: All login username
  *                 example: admin1
  *               password:
  *                 type: string

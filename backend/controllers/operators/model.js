@@ -10,6 +10,7 @@ const selectBy = `
     o.id,
     o.login,
     o.password,
+    o.role,
     branch.name AS branch_name,
     admin.login AS admin_name,
     o.created_at,
@@ -42,7 +43,7 @@ const dailyAmount = async () => {
     throw e;
   }
 };
-const selectByName = async (login) => {
+const selectByNameOperator = async (login) => {
   try {
     const res = await knex.raw(selectBy, [login]);
     return res.rows;
@@ -62,4 +63,4 @@ const selectByIDOperator = async (id) => {
   }
 };
 
-module.exports = { selectByIDOperator, selectByName, dailyAmount };
+module.exports = { selectByIDOperator, selectByNameOperator, dailyAmount };

@@ -1,11 +1,11 @@
 const { compare } = require("bcryptjs");
-const { selectByName, dailyAmount } = require("./model");
+const { selectByNameOperator, dailyAmount } = require("./model");
 const { generateJWT } = require("../../config/functions");
 
 const loginCont = async (req, res) => {
   const { login, password } = req.body;
   try {
-    const result = await selectByName(login);
+    const result = await selectByNameOperator(login);
     if (result.length == 0)
       return res.status(404).json({ message: "admin not found" });
 
