@@ -94,8 +94,8 @@ const selectOperatorFilterCont = async (req, res) => {
 };
 
 const createOperatorCont = async (req, res) => {
-  const { branch_id, admin_id, login, password } = req.body;
-  if (!branch_id || !login || !password || !admin_id)
+  const { branch_id, admin_id, town_id, login, password } = req.body;
+  if (!branch_id || !login || !town_id || !password || !admin_id)
     return res.status(400).json({ message: "fill all fields" });
 
   try {
@@ -106,7 +106,13 @@ const createOperatorCont = async (req, res) => {
     if (!result2)
       return res.status(400).json({ message: "incorrect admin_id" });
 
-    const result = await createOperator(branch_id, admin_id, login, password);
+    const result = await createOperator(
+      branch_id,
+      town_id,
+      admin_id,
+      login,
+      password
+    );
 
     if (!result) return res.status(404).json({ message: "unsuccesfully" });
 
@@ -118,11 +124,17 @@ const createOperatorCont = async (req, res) => {
 
 const updateOperatorCont = async (req, res) => {
   const { id } = req.params;
-  const { branch_id, login, password } = req.body;
-  if (!branch_id || !login || !password)
+  const { branch_id, login, password, town_id } = req.body;
+  if (!branch_id || !login || !password || !town_id)
     return res.status(400).json({ message: "fill all fields" });
   try {
-    const result = await updateOperator(id, branch_id, login, password);
+    const result = await updateOperator(
+      id,
+      branch_id,
+      town_id,
+      login,
+      password
+    );
     return res.status(200).json(result[0]);
   } catch (e) {
     res.status(500).json({ error: e.message });

@@ -204,12 +204,15 @@ const router = express.Router();
  *             required:
  *               - branch_id
  *               - admin_id
+ *               - town_id
  *               - login
  *               - password
  *             properties:
  *               branch_id:
  *                 type: integer
  *               admin_id:
+ *                 type: integer
+ *               town_id:
  *                 type: integer
  *               login:
  *                 type: string
@@ -284,10 +287,13 @@ const router = express.Router();
  *             type: object
  *             required:
  *               - branch_id
+ *               - town_id
  *               - login
  *               - password
  *             properties:
  *               branch_id:
+ *                 type: integer
+ *               town_id:
  *                 type: integer
  *               login:
  *                 type: string

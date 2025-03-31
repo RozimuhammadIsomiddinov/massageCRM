@@ -7,6 +7,7 @@ const createOfferCont = async (req, res) => {
     cost,
     admin_id,
     worker_id,
+    town_id,
     operator_id,
     client_name,
     description,
@@ -19,6 +20,7 @@ const createOfferCont = async (req, res) => {
       cost,
       admin_id,
       worker_id,
+      town_id,
       operator_id,
       client_name,
       description

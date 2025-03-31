@@ -59,9 +59,11 @@ const selectOperatorQuery = `
     o.id,
     o.login,
     o.role,
-    branch.name AS branch_name
+    branch.name AS branch_name,
+    town.name AS town_name
     FROM operator AS o 
-    JOIN branch ON o.branch_id = branch.id;
+    JOIN branch ON o.branch_id = branch.id
+    JOIN town ON o.town_id = town.id;
 `;
 
 const selectOperatorFilterQuery = `
@@ -69,12 +71,14 @@ const selectOperatorFilterQuery = `
     o.id,
     o.login,
     b.name AS branch_name,
+    town.name AS town_name,
     COALESCE(SUM(offer.end_time - offer.start_time), INTERVAL '0') AS working_time,
     COALESCE(SUM(offer.cost), 0) AS total_amount,
     COALESCE(SUM(offer.cost), 0) * 0.5 AS operator_part
 FROM operator AS o
 LEFT JOIN branch AS b ON o.branch_id = b.id
 LEFT JOIN offer ON o.id = offer.operator_id
+LEFT JOIN town ON town.id = o.town_name
     AND offer.created_at >= ? AND offer.created_at <= ?
 GROUP BY o.id, o.login, b.name 
 ORDER BY o.id ASC;
@@ -83,10 +87,11 @@ const createOperatorQuery = `
     INSERT INTO operator(
     branch_id,
     admin_id,
+    town_id,
     login,
     password
     )
-    VALUES(?,?,?,?)
+    VALUES(?,?,?,?,?)
     RETURNING *;
 `;
 //update from super_admin
@@ -94,6 +99,7 @@ const updateOperatorQuery = `
     UPDATE operator
       SET 
       branch_id = ?,
+      town_id = ?,
       login = ?,
       password = ?,
       updated_at = NOW()
@@ -180,13 +186,20 @@ const updateAdmin = async (id, brach_id, login, password) => {
     throw e;
   }
 };
-const createOperator = async (branch_id, admin_id, login, password) => {
+const createOperator = async (
+  branch_id,
+  town_id,
+  admin_id,
+  login,
+  password
+) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const res = await knex.raw(createOperatorQuery, [
       branch_id,
       admin_id,
+      town_id,
       login,
       hashedPassword,
     ]);
@@ -196,12 +209,13 @@ const createOperator = async (branch_id, admin_id, login, password) => {
     throw e;
   }
 };
-const updateOperator = async (id, branch_id, login, password) => {
+const updateOperator = async (id, branch_id, town_id, login, password) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const res = await knex.raw(updateOperatorQuery, [
       branch_id,
+      town_id,
       login,
       hashedPassword,
       id,

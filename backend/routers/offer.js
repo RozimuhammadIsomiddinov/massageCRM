@@ -36,6 +36,7 @@ const router = express.Router();
  *               - cost
  *               - admin_id
  *               - worker_id
+ *               - town_id
  *               - operator_id
  *               - client_name
  *               - description
@@ -51,6 +52,8 @@ const router = express.Router();
  *               admin_id:
  *                 type: integer
  *               worker_id:
+ *                 type: integer
+ *               town_id:
  *                 type: integer
  *               operator_id:
  *                 type: integer

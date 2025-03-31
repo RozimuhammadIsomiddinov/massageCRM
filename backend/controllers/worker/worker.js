@@ -3,9 +3,9 @@ const { selectByIDOperator } = require("../operators/model");
 const { createWorker, updateWorker, deleteWorker } = require("./model");
 
 const createWorkerCont = async (req, res) => {
-  const { branch_id, operator_id, name } = req.body;
+  const { branch_id, operator_id, town_id, name } = req.body;
 
-  if (!branch_id || !operator_id || !name) {
+  if (!branch_id || !operator_id || !town_id || !name) {
     return res.status(400).json({ message: "fill all fields" });
   }
 
@@ -18,7 +18,12 @@ const createWorkerCont = async (req, res) => {
     if (result2.length == 0)
       return res.status(404).json({ message: "operator not found" });
 
-    const result = await createWorker({ branch_id, operator_id, name });
+    const result = await createWorker({
+      branch_id,
+      operator_id,
+      town_id,
+      name,
+    });
     return res.status(201).json(result[0]);
   } catch (e) {
     res
@@ -29,9 +34,9 @@ const createWorkerCont = async (req, res) => {
 
 const updateWorkerCont = async (req, res) => {
   const { id } = req.params;
-  const { branch_id, operator_id, name } = req.body;
+  const { branch_id, operator_id, name, town_id } = req.body;
 
-  if (!branch_id || !operator_id || !name) {
+  if (!branch_id || !operator_id || !name || !town_id) {
     return res.status(400).json({ message: "fill all fields" });
   }
 
@@ -44,7 +49,10 @@ const updateWorkerCont = async (req, res) => {
     if (result2.length == 0)
       return res.status(404).json({ message: "operator not found" });
 
-    const result = await updateWorker({ branch_id, operator_id, name }, id);
+    const result = await updateWorker(
+      { branch_id, operator_id, name, town_id },
+      id
+    );
     return res.status(200).json(result[0]);
   } catch (e) {
     res

@@ -3,6 +3,7 @@ exports.up = function (knex) {
       CREATE TABLE IF NOT EXISTS worker(
       id SERIAL PRIMARY KEY,
       branch_id INTEGER REFERENCES branch(id) ON DELETE CASCADE,
+      town_id INTEGER REFERENCES town(id) ON DELETE CASCADE,
       operator_id INTEGER REFERENCES operator(id) ON DELETE CASCADE,
       name VARCHAR(255),
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,

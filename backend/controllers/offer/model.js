@@ -15,11 +15,12 @@ const createOfferQuery = `
         cost,
         admin_id,
         worker_id,
+        town_id,
         operator_id,
         client_name,
         description
         )
-        VALUES (?,?,?,?,?,?,?,?)
+        VALUES (?,?,?,?,?,?,?,?,?)
         RETURNING *;
 `;
 
@@ -43,6 +44,7 @@ const createOffer = async (
   cost,
   admin_id,
   worker_id,
+  town_id,
   operator_id,
   client_name,
   description
@@ -54,6 +56,7 @@ const createOffer = async (
       cost,
       admin_id,
       worker_id,
+      town_id,
       operator_id,
       client_name,
       description,

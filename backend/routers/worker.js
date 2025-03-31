@@ -27,9 +27,13 @@ const router = express.Router();
  *             required:
  *               - branch_id
  *               - operator_id
+ *               - town_id
  *               - name
  *             properties:
  *               branch_id:
+ *                 type: integer
+ *                 example: 1
+ *               town_id:
  *                 type: integer
  *                 example: 1
  *               operator_id:
@@ -69,9 +73,13 @@ const router = express.Router();
  *             required:
  *               - branch_id
  *               - operator_id
+ *               - town_id
  *               - name
  *             properties:
  *               branch_id:
+ *                 type: integer
+ *                 example: 1
+ *               town_id:
  *                 type: integer
  *                 example: 1
  *               operator_id:
@@ -93,7 +101,7 @@ const router = express.Router();
  * @swagger
  * /worker/delete/{id}:
  *   delete:
- *     summary: Worker o‘chirish
+ *     summary: Worker ochirish
  *     tags: [Worker]
  *     parameters:
  *       - in: path

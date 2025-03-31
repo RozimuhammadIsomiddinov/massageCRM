@@ -12,12 +12,14 @@ const selectBy = `
     o.password,
     o.role,
     branch.name AS branch_name,
+    town.name AS town_name,
     admin.login AS admin_name,
     o.created_at,
     o.updated_at
   FROM operator AS o
   JOIN branch ON o.branch_id = branch.id
   JOIN admin ON o.admin_id = admin.id
+  JOIN town ON o.town_id = town.id
   WHERE o.login = ?;
 `;
 
