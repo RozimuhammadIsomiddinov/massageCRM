@@ -6,7 +6,7 @@ exports.up = function (knex) {
   return knex.raw(`
     CREATE TABLE  IF NOT EXISTS town (
     id SERIAL PRIMARY KEY,
-    branch_id INTEGER REFERECES branch(id) ON DELETE CASCADE,
+    branch_id INTEGER REFERENCES branch(id) ON DELETE CASCADE,
     name VARCHAR(255) ,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
