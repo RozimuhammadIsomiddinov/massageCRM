@@ -38,7 +38,7 @@ const options = {
     },
     servers: [
       {
-        url: "http://213.139.210.248:3001/",
+        url: "https://api.crmmass.ru",
       },
     ],
   },
