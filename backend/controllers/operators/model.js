@@ -22,7 +22,7 @@ const selectBy = `
   JOIN town ON o.town_id = town.id
   WHERE o.login = ?;
 `;
-
+//bu harkunlik
 const dailyAmountQuery = `
  SELECT 
   operator.id AS operator_id,
@@ -36,6 +36,19 @@ WHERE offer.is_cancelled = false
 GROUP BY operator.id, operator.login, DATE(offer.created_at);
 `;
 
+const twoWeaksQuery = `
+  SELECT 
+  operator.id AS operator_id,
+  operator.login,
+  SUM(offer.cost) AS total_amount
+FROM offer
+JOIN operator ON offer.operator_id = operator.id
+WHERE offer.is_cancelled = false
+  AND offer.created_at >= CURRENT_DATE - INTERVAL '14 days'
+  AND operator.id = ?
+GROUP BY operator.id, operator.login;
+`;
+
 const dailyAmount = async () => {
   try {
     const res = await knex.raw(dailyAmountQuery);
@@ -45,6 +58,17 @@ const dailyAmount = async () => {
     throw e;
   }
 };
+
+const balanceOperator = async (id) => {
+  try {
+    const res = await knex.raw(twoWeaksQuery, [id]);
+    return res.rows;
+  } catch (e) {
+    console.log("error from balanceOperator\t" + e.message);
+    throw e;
+  }
+};
+
 const selectByNameOperator = async (login) => {
   try {
     const res = await knex.raw(selectBy, [login]);
@@ -65,4 +89,9 @@ const selectByIDOperator = async (id) => {
   }
 };
 
-module.exports = { selectByIDOperator, selectByNameOperator, dailyAmount };
+module.exports = {
+  selectByIDOperator,
+  selectByNameOperator,
+  dailyAmount,
+  balanceOperator,
+};

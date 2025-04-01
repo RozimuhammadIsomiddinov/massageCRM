@@ -1,6 +1,6 @@
 const { compare } = require("bcryptjs");
 
-const { selectByName } = require("./model");
+const { selectByName, archive, statisticWorker } = require("./model");
 const { generateJWT } = require("../../config/functions");
 const { selectByLogin } = require("../super_admin/model");
 const { selectByNameOperator } = require("../operators/model");
@@ -50,4 +50,30 @@ const allLoginCont = async (req, res) => {
       .json({ message: "error from allLoginCont", error: e.message });
   }
 };
-module.exports = { loginCont, allLoginCont };
+
+const archiveCont = async (req, res) => {
+  const { from, to } = req.query;
+  try {
+    const result = await archive(from, to);
+    return res.status(200).json(result);
+  } catch (e) {
+    res
+      .status(500)
+      .json({ message: "error from archiveCont", error: e.message });
+  }
+};
+
+const statisticWorkerCont = async (req, res) => {
+  const { from, to } = req.query;
+
+  try {
+    const result = await statisticWorker(from, to);
+    return res.status(200).json(result);
+  } catch (e) {
+    res
+      .status(500)
+      .json({ message: "error from statisticWorkerCont", error: e.message });
+  }
+};
+
+module.exports = { loginCont, allLoginCont, archiveCont, statisticWorkerCont };

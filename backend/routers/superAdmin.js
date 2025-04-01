@@ -207,6 +207,7 @@ const router = express.Router();
  *               - town_id
  *               - login
  *               - password
+ *               - shifts
  *             properties:
  *               branch_id:
  *                 type: integer
@@ -218,6 +219,11 @@ const router = express.Router();
  *                 type: string
  *               password:
  *                 type: string
+ *               shifts:
+ *                 type: array
+ *                 items:
+ *                   type: integer
+ *                 description: List of shift IDs assigned to the operator
  *     responses:
  *       201:
  *         description: Operator created successfully

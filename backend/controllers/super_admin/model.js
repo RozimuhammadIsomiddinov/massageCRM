@@ -21,18 +21,22 @@ const createSuperAdminQuery = `
         RETURNING *;
 `;
 const selectAdminFilterQuery = `
-      SELECT 
-        a.id,
-        a.login,
-        branch.name AS branch_name,
-        COALESCE(SUM(offer.end_time - offer.start_time), INTERVAL '0') AS working_time,
-        COALESCE(SUM(offer.cost), 0) AS total_amount,
-        COALESCE(SUM(offer.cost), 0) * 0.35 AS admin_part
-    FROM admin AS a
-    JOIN branch ON a.branch_id = branch.id
-    LEFT JOIN offer ON a.id = offer.admin_id
-    AND offer.created_at >= ? AND offer.created_at <= ?   
-     GROUP BY a.id, a.login, branch.name;
+       SELECT 
+      b.id AS branch_id,
+      admin.login AS admin_name,
+      admin.id AS admin_id,
+      b.name AS branch_name,
+      COALESCE(SUM(EXTRACT(EPOCH FROM (s.end_time - s.start_time))), 0) AS total_working_hours,
+      COALESCE(SUM(offer.cost), 0) AS income,
+      (COALESCE(SUM(offer.cost), 0) * 0.4) AS salary
+  FROM branch AS b
+  LEFT JOIN operator o ON o.branch_id = b.id
+  LEFT JOIN operator_shift os ON os.operator_id = o.id
+  LEFT JOIN shift s ON s.id = os.shift_id
+  LEFT JOIN admin ON admin.branch_id = b.id
+  LEFT JOIN offer ON offer.admin_id = admin.id 
+  AND offer.created_at >= ? AND offer.created_at <= ?   
+  GROUP BY b.id, b.name, admin.login, admin.id, offer.cost;
 `;
 const createAdminQuery = `
         INSERT INTO admin (
@@ -66,6 +70,9 @@ const selectOperatorQuery = `
     JOIN town ON o.town_id = town.id;
 `;
 
+//     COALESCE(SUM(offer.cost), 0) - COALESCE(SUM(offer.cost), 0) without_spend (xarajatlarni chiqarib tashlash kerak) ---->> shunda
+
+//kassa - 5% = itogo --> kassa bu sof yani xarakatlarni ayirgandagi
 const selectOperatorFilterQuery = `
   SELECT 
     o.id,
@@ -74,13 +81,18 @@ const selectOperatorFilterQuery = `
     town.name AS town_name,
     COALESCE(SUM(offer.end_time - offer.start_time), INTERVAL '0') AS working_time,
     COALESCE(SUM(offer.cost), 0) AS total_amount,
+    COALESCE(SUM(offer.cost), 0) - COALESCE(SUM(spend.cost), 0) AS without_spend,
+    COALESCE(SUM(offer.cost), 0) *0.5 + 100  AS payment,
+    COALESCE(SUM(offer.cost), 0) + 10 AS cash,
+    COALESCE(SUM(offer.cost), 0) + 10 - COALESCE(SUM(offer.cost), 0) *0.05 AS result,
     COALESCE(SUM(offer.cost), 0) * 0.5 AS operator_part
 FROM operator AS o
 LEFT JOIN branch AS b ON o.branch_id = b.id
 LEFT JOIN offer ON o.id = offer.operator_id
-LEFT JOIN town ON town.id = o.town_name
+LEFT JOIN town ON town.id = o.town_id
+LEFT JOIN spend ON spend.operator_id = o.id
     AND offer.created_at >= ? AND offer.created_at <= ?
-GROUP BY o.id, o.login, b.name 
+GROUP BY o.id, o.login, b.name, town_name
 ORDER BY o.id ASC;
 `;
 const createOperatorQuery = `
@@ -94,7 +106,17 @@ const createOperatorQuery = `
     VALUES(?,?,?,?,?)
     RETURNING *;
 `;
-//update from super_admin
+
+const createOperator_shiftQuery = `
+    INSERT INTO operator_shift(
+    operator_id,
+    shift_id,
+    work_date
+    )
+    VALUES(?,?,?)
+    RETURNING *;
+`;
+
 const updateOperatorQuery = `
     UPDATE operator
       SET 
@@ -186,12 +208,14 @@ const updateAdmin = async (id, brach_id, login, password) => {
     throw e;
   }
 };
+
 const createOperator = async (
   branch_id,
   town_id,
   admin_id,
   login,
-  password
+  password,
+  shifts // [1, 2, 3]
 ) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -203,12 +227,28 @@ const createOperator = async (
       login,
       hashedPassword,
     ]);
+
+    const operator = res.rows[0];
+
+    if (!operator) return null;
+
+    const currentDate = new Date().toISOString().split("T")[0];
+
+    for (const shift of shifts) {
+      await knex.raw(createOperator_shiftQuery, [
+        operator.id,
+        shift,
+        currentDate,
+      ]);
+    }
+
     return res.rows;
   } catch (e) {
     console.log("Xatolik createOperator: " + e.message);
     throw e;
   }
 };
+
 const updateOperator = async (id, branch_id, town_id, login, password) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);

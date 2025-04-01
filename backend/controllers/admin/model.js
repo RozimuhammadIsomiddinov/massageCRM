@@ -40,6 +40,71 @@ const createOperatorQuery = `
     RETURNING *;
 `;
 
+const archiveQuery = `
+    SELECT 
+    o.login,
+    offer.is_cancelled AS status,
+    DATE_TRUNC('month', offer.created_at) AS month,
+    COALESCE(SUM(offer.cost) * 0.05, 0) AS income,
+    COALESCE(
+        SUM(EXTRACT(EPOCH FROM (offer.end_time - offer.start_time))) / 3600, 
+        0
+    ) AS working_hours
+FROM operator AS o
+JOIN offer ON offer.operator_id = o.id
+WHERE offer.start_time >= ?
+  AND offer.end_time <= ?
+  AND offer.created_at >= DATE_TRUNC('month', CURRENT_DATE)
+  AND offer.created_at < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month'
+GROUP BY o.login, status, month;
+
+ `;
+
+const statisticWorkerQuery = `
+  SELECT 
+    w.id AS worker_id,
+    w.name AS worker_name,
+    COUNT(CASE WHEN o.is_cancelled = true THEN 1 END) AS cancelled,
+    COUNT(o.id) AS all_guest,
+    COALESCE(SUM(o.cost), 0) - COALESCE(SUM(sp.total_cost), 0) AS income,
+    (COALESCE(SUM(o.cost), 0) - COALESCE(SUM(sp.total_cost), 0)) * 0.05 AS worker_part,
+    COALESCE(
+        SUM(EXTRACT(EPOCH FROM (o.end_time - o.start_time))), 
+        0
+    ) AS total_working_hours
+FROM worker AS w
+LEFT JOIN offer AS o ON o.worker_id = w.id
+LEFT JOIN (
+    SELECT worker_id, SUM(cost) AS total_cost
+    FROM spend
+    GROUP BY worker_id
+) AS sp ON sp.worker_id = w.id
+WHERE o.created_at >= ?  
+  AND o.created_at <= ?   
+GROUP BY w.id, w.name
+ORDER BY total_working_hours DESC;
+
+`;
+
+const archive = async (from, to) => {
+  try {
+    const res = await knex.raw(archiveQuery, [from, to]);
+    return res.rows;
+  } catch (e) {
+    console.log("error from archive\t" + e.message);
+    throw e;
+  }
+};
+
+const statisticWorker = async (from, to) => {
+  try {
+    const res = await knex.raw(statisticWorkerQuery, [from, to]);
+    return res.rows;
+  } catch (e) {
+    console.log("error from statisticWorker\t" + e.message);
+    throw e;
+  }
+};
 const selectByName = async (login) => {
   try {
     const res = await knex.raw(selectBy, [login]);
@@ -100,4 +165,11 @@ const createOperator = async (admin_id, branch_id, login, password) => {
 };
 /* createAdmin();
  */
-module.exports = { selectByName, selectByID_admin, createOperator };
+
+module.exports = {
+  selectByName,
+  selectByID_admin,
+  createOperator,
+  archive,
+  statisticWorker,
+};

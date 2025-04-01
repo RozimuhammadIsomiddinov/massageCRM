@@ -10,6 +10,8 @@ const offerRouter = require("./routers/offer");
 const branchRouter = require("./routers/branch");
 const workerRouter = require("./routers/worker");
 const townRouter = require("./routers/town");
+const shiftRouter = require("./routers/shift");
+const spendRouter = require("./routers/spend");
 const app = express();
 
 app.use(express.json());
@@ -68,6 +70,8 @@ app.use("/offer", offerRouter);
 app.use("/branch", branchRouter);
 app.use("/worker", workerRouter);
 app.use("/town", townRouter);
+app.use("/shift", shiftRouter);
+app.use("/spend", spendRouter);
 
 app.use("/api-swagger", swaggerUi.serve, swaggerUi.setup(specs));
 

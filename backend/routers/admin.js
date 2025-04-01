@@ -1,5 +1,9 @@
 const express = require("express");
-const { loginCont } = require("../controllers/admin/admin");
+const {
+  loginCont,
+  archiveCont,
+  statisticWorkerCont,
+} = require("../controllers/admin/admin");
 const auth = require("../middleware/auth");
 const {
   createOperatorCont,
@@ -107,7 +111,102 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
+/**
+ * @swagger
+ * /admin/archive:
+ *   get:
+ *     summary: Archive statistics
+ *     tags: [Admin]
+ *     parameters:
+ *       - in: query
+ *         name: from
+ *         schema:
+ *           type: string
+ *         required: true
+ *         example: "10:10:10"
+ *       - in: query
+ *         name: to
+ *         schema:
+ *           type: string
+ *         required: true
+ *         example: "18:10:10"
+ *     responses:
+ *       200:
+ *         description: Muvoffaqiyatli natija
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *       400:
+ *         description:  (missing params)
+ *       500:
+ *         description: Server xatosi
+ */
 
+/**
+ * @swagger
+ * /admin/statistic-worker:
+ *   get:
+ *     summary: Worker statistikasi
+ *     tags: [Admin]
+ *     parameters:
+ *       - in: query
+ *         name: from
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: true
+ *         description: Boshlang‘ich sana (YYYY-MM-DD)
+ *         example: "2024-01-01"
+ *       - in: query
+ *         name: to
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: true
+ *         description: Tugash sanasi (YYYY-MM-DD)
+ *         example: "2024-02-01"
+ *     responses:
+ *       200:
+ *         description: Muvoffaqiyatli natija
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   worker_id:
+ *                     type: integer
+ *                     description: Ishchi ID si
+ *                   worker_name:
+ *                     type: string
+ *                     description: Ishchi ismi
+ *                   cancelled:
+ *                     type: integer
+ *                     description: Bekor qilingan takliflar soni
+ *                   all_guest:
+ *                     type: integer
+ *                     description: Jami qabul qilingan mehmonlar soni
+ *                   income:
+ *                     type: number
+ *                     description: Jami daromad
+ *                   worker_part:
+ *                     type: number
+ *                     description: Ishchi ulushi (5%)
+ *                   total_working_hours:
+ *                     type: number
+ *                     description: Ishlangan soatlar (sekundlarda)
+ *       400:
+ *         description:  (missing params)
+ *       500:
+ *         description: Server xatosi
+ */
+
+router.get("/archive", archiveCont);
+router.get("/statistic-worker", statisticWorkerCont);
 router.post("/login", loginCont);
 router.post("/add-operator", /*  auth, */ createOperatorCont);
 

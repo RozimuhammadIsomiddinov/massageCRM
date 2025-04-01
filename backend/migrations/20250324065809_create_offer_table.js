@@ -29,6 +29,6 @@ exports.up = function (knex) {
  */
 exports.down = function (knex) {
   return knex.raw(`
-    DROP TABLE IF EXISTS offer
+    DROP TABLE IF EXISTS offer;
     `);
 };

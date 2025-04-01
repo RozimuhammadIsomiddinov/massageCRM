@@ -94,8 +94,8 @@ const selectOperatorFilterCont = async (req, res) => {
 };
 
 const createOperatorCont = async (req, res) => {
-  const { branch_id, admin_id, town_id, login, password } = req.body;
-  if (!branch_id || !login || !town_id || !password || !admin_id)
+  const { branch_id, admin_id, town_id, login, password, shifts } = req.body;
+  if (!branch_id || !login || !town_id || !password || !admin_id || !shifts)
     return res.status(400).json({ message: "fill all fields" });
 
   try {
@@ -111,7 +111,8 @@ const createOperatorCont = async (req, res) => {
       town_id,
       admin_id,
       login,
-      password
+      password,
+      shifts
     );
 
     if (!result) return res.status(404).json({ message: "unsuccesfully" });

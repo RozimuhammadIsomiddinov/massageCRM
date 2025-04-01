@@ -4,6 +4,7 @@ const auth = require("../middleware/auth");
 const {
   loginCont,
   dailyAmountCont,
+  balanceOperatorCont,
 } = require("../controllers/operators/operator");
 
 const router = express.Router();
@@ -64,6 +65,32 @@ const router = express.Router();
 
 /**
  * @swagger
+ * /operator/balance/{id}:
+ *   get:
+ *     summary: Get balance an operator by ID
+ *     tags: [Operators]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: operator ID
+ *     responses:
+ *       200:
+ *         description: balance data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       400:
+ *         description: ID not sent
+ *       404:
+ *         description: balace not found
+ */
+
+/**
+ * @swagger
  * /operator/daily:
  *   get:
  *     summary: Get daily amount statistics
@@ -82,6 +109,7 @@ const router = express.Router();
  *         description: Server error while fetching daily amount
  */
 
+router.get("/balance/:id", balanceOperatorCont);
 router.get("/daily", dailyAmountCont);
 router.post("/login", loginCont);
 
