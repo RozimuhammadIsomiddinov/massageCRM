@@ -3,10 +3,12 @@ const {
   loginCont,
   archiveCont,
   statisticWorkerCont,
+  selectOperatorAdminCont,
 } = require("../controllers/admin/admin");
 const auth = require("../middleware/auth");
 const {
   createOperatorCont,
+  selectOperatorFilterCont,
 } = require("../controllers/super_admin/super_admin");
 
 const router = express.Router();
@@ -204,10 +206,11 @@ const router = express.Router();
  *       500:
  *         description: Server xatosi
  */
-
-router.get("/archive", archiveCont);
-router.get("/statistic-worker", statisticWorkerCont);
+router.get("/control", auth("admin"), selectOperatorAdminCont);
+router.get("/archive", auth("admin"), archiveCont);
+router.get("/statistic-worker", auth("admin"), statisticWorkerCont);
 router.post("/login", loginCont);
-router.post("/add-operator", /*  auth, */ createOperatorCont);
+router.post("/operator-filter", auth("admin"), selectOperatorFilterCont);
+router.post("/add-operator", auth("admin"), createOperatorCont);
 
 module.exports = router;

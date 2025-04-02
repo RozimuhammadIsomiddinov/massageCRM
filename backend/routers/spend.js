@@ -1,5 +1,6 @@
 const express = require("express");
 const { createSpendCont } = require("../controllers/spend/spend");
+const auth = require("../middleware/auth");
 const router = express.Router();
 /**
  * @swagger
@@ -50,5 +51,5 @@ const router = express.Router();
  *         description: Server xatosi
  */
 
-router.post("/create", createSpendCont);
+router.post("/create", auth("operator"), createSpendCont);
 module.exports = router;

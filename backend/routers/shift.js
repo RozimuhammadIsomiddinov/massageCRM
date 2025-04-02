@@ -3,6 +3,7 @@ const {
   createShiftCont,
   updateShiftCont,
 } = require("../controllers/shift/shift");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 /**
@@ -76,7 +77,7 @@ const router = express.Router();
  *         description: Server error
  */
 
-router.post("/create", createShiftCont);
-router.put("/update/:id", updateShiftCont);
+router.post("/create", auth("admin"), createShiftCont);
+router.put("/update/:id", auth("admin"), updateShiftCont);
 
 module.exports = router;

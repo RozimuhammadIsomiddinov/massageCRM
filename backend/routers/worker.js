@@ -4,6 +4,7 @@ const {
   updateWorkerCont,
   deleteWorkerCont,
 } = require("../controllers/worker/worker");
+const auth = require("../middleware/auth");
 const router = express.Router();
 
 /**
@@ -119,7 +120,7 @@ const router = express.Router();
  *         description: Server xatosi
  */
 
-router.post("/create", createWorkerCont);
-router.put("/update/:id", updateWorkerCont);
-router.delete("/delete/:id", deleteWorkerCont);
+router.post("/create", auth("operator"), createWorkerCont);
+router.put("/update/:id", auth("operator"), updateWorkerCont);
+router.delete("/delete/:id", auth("operator"), deleteWorkerCont);
 module.exports = router;

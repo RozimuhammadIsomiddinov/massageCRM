@@ -10,6 +10,7 @@ const {
   selectFileCont,
   updateFileCont,
 } = require("../controllers/file/file");
+const auth = require("../middleware/auth");
 
 const router = express.Router();
 /**
@@ -200,10 +201,20 @@ const router = express.Router();
  *         description: Server error
  */
 
-router.get("/file/:id", selectFileCont);
-router.post("/create-file/:offer_id", upload.single("file"), createFileCont);
-router.put("/update-file/:id", upload.single("file"), updateFileCont);
-router.post("/create", createOfferCont);
-router.put("/update/:id", updateOfferCont);
-router.delete("/delete/:id", deleteOfferCont);
+router.get("/file/:id", auth("operator"), selectFileCont);
+router.post(
+  "/create-file/:offer_id",
+  auth("operator"),
+  upload.single("file"),
+  createFileCont
+);
+router.put(
+  "/update-file/:id",
+  auth("operator"),
+  upload.single("file"),
+  updateFileCont
+);
+router.post("/create", auth("operator"), createOfferCont);
+router.put("/update/:id", auth("operator"), updateOfferCont);
+router.delete("/delete/:id", auth("operator"), deleteOfferCont);
 module.exports = router;

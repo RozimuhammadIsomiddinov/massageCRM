@@ -1,10 +1,26 @@
 const { compare } = require("bcryptjs");
 
-const { selectByName, archive, statisticWorker } = require("./model");
+const {
+  selectByName,
+  archive,
+  statisticWorker,
+  selectAllAdmin,
+  selectOperatorAdmin,
+} = require("./model");
 const { generateJWT } = require("../../config/functions");
 const { selectByLogin } = require("../super_admin/model");
 const { selectByNameOperator } = require("../operators/model");
 
+const selectAllADminCont = async (req, res) => {
+  try {
+    const result = await selectAllAdmin();
+    return res.status(200).json(result);
+  } catch (e) {
+    res
+      .status(500)
+      .json({ message: "error from selectAllADminCont", error: e.message });
+  }
+};
 const loginCont = async (req, res) => {
   const { login, password } = req.body;
   try {
@@ -76,4 +92,22 @@ const statisticWorkerCont = async (req, res) => {
   }
 };
 
-module.exports = { loginCont, allLoginCont, archiveCont, statisticWorkerCont };
+const selectOperatorAdminCont = async (req, res) => {
+  try {
+    const result = await selectOperatorAdmin();
+    return res.status(200).json(result);
+  } catch (e) {
+    res.status(500).json({
+      message: "error from selectOperatorAdminCont",
+      error: e.message,
+    });
+  }
+};
+module.exports = {
+  loginCont,
+  allLoginCont,
+  archiveCont,
+  statisticWorkerCont,
+  selectAllADminCont,
+  selectOperatorAdminCont,
+};

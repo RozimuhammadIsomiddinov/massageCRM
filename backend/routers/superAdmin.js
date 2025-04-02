@@ -9,6 +9,8 @@ const {
   selectOperatorFilterCont,
   loginCont,
 } = require("../controllers/super_admin/super_admin");
+const auth = require("../middleware/auth");
+const { selectAllADminCont } = require("../controllers/admin/admin");
 const router = express.Router();
 
 /**
@@ -314,16 +316,17 @@ const router = express.Router();
  *         description: Server error
  */
 
-router.get("/operator", selectOperatorCont);
+router.get("/all-admin", auth("super_admin"), selectAllADminCont);
+router.get("/operator", auth("super_admin"), selectOperatorCont);
 
-router.post("/admin-filter", selectAdminFilterCont);
-router.post("/operator-filter", selectOperatorFilterCont);
+router.post("/admin-filter", auth("super_admin"), selectAdminFilterCont);
+router.post("/operator-filter", auth("super_admin"), selectOperatorFilterCont);
 
 router.post("/login", loginCont);
-router.post("/create-admin", createAdminCont);
-router.post("/create-operator", createOperatorCont);
+router.post("/create-admin", auth("super_admin"), createAdminCont);
+router.post("/create-operator", auth("super_admin"), createOperatorCont);
 
-router.put("/update-admin/:id", updateAdminCont);
-router.put("/update-operator/:id", updateOperatorCont);
+router.put("/update-admin/:id", auth("super_admin"), updateAdminCont);
+router.put("/update-operator/:id", auth("super_admin"), updateOperatorCont);
 
 module.exports = router;

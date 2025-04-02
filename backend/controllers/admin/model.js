@@ -3,6 +3,18 @@ require("dotenv").config();
 const knex = require("knex")(require("../../knexfile"));
 const bcrypt = require("bcryptjs");
 
+const selectAllAdminQuery = `
+      SELECT 
+      a.id,
+      a.login,
+      b.name AS branch_name,
+      a.role,
+      a.password,
+      a.created_at,
+      a.updated_at
+      FROM admin AS a 
+      JOIN branch AS b ON a.branch_id = b.id;
+      `;
 const selectByIDQuery = `
         SELECT *FROM admin WHERE id = ?;
 `;
@@ -47,7 +59,7 @@ const archiveQuery = `
     DATE_TRUNC('month', offer.created_at) AS month,
     COALESCE(SUM(offer.cost) * 0.05, 0) AS income,
     COALESCE(
-        SUM(EXTRACT(EPOCH FROM (offer.end_time - offer.start_time))) / 3600, 
+        SUM(EXTRACT(EPOCH FROM (offer.end_time - offer.start_time))), 
         0
     ) AS working_hours
 FROM operator AS o
@@ -67,7 +79,7 @@ const statisticWorkerQuery = `
     COUNT(CASE WHEN o.is_cancelled = true THEN 1 END) AS cancelled,
     COUNT(o.id) AS all_guest,
     COALESCE(SUM(o.cost), 0) - COALESCE(SUM(sp.total_cost), 0) AS income,
-    (COALESCE(SUM(o.cost), 0) - COALESCE(SUM(sp.total_cost), 0)) * 0.05 AS worker_part,
+    (COALESCE(SUM(o.cost), 0) - COALESCE(SUM(sp.total_cost), 0)) * 0.25 AS worker_part,
     COALESCE(
         SUM(EXTRACT(EPOCH FROM (o.end_time - o.start_time))), 
         0
@@ -86,6 +98,46 @@ ORDER BY total_working_hours DESC;
 
 `;
 
+const selectOperatorAdminQuery = `
+SELECT 
+    o.id,
+    o.login,
+    b.name AS branch_name,
+    town.name AS town_name,
+    COALESCE(SUM(offer.end_time - offer.start_time), INTERVAL '0') AS working_time,
+    COALESCE(SUM(offer.cost), 0) AS total_amount,
+    COALESCE(SUM(offer.cost), 0) - COALESCE(SUM(spend.cost), 0) AS without_spend,
+    COALESCE(SUM(offer.cost), 0) - COALESCE(SUM(spend.cost), 0) *0.31  AS payment,
+    COALESCE(SUM(offer.cost), 0) + 0.05 AS cash,
+    COALESCE(SUM(offer.cost), 0) + 0.05 - 0.05 AS result,
+    COALESCE(SUM(offer.cost), 0) * 0.5 AS operator_part
+FROM operator AS o
+LEFT JOIN branch AS b ON o.branch_id = b.id
+LEFT JOIN offer ON o.id = offer.operator_id
+LEFT JOIN town ON town.id = o.town_id
+LEFT JOIN spend ON spend.operator_id = o.id
+GROUP BY o.id, o.login, b.name, town_name
+ORDER BY o.id ASC;
+`;
+
+const selectOperatorAdmin = async () => {
+  try {
+    const res = await knex.raw(selectOperatorAdminQuery);
+    return res.rows;
+  } catch (e) {
+    console.log("error from selectOperatorAdmin\t" + e.message);
+    throw e;
+  }
+};
+const selectAllAdmin = async () => {
+  try {
+    const res = await knex.raw(selectAllAdminQuery);
+    return res.rows;
+  } catch (e) {
+    console.log("error from selectAllAdmin\t" + e.message);
+    throw e;
+  }
+};
 const archive = async (from, to) => {
   try {
     const res = await knex.raw(archiveQuery, [from, to]);
@@ -167,9 +219,11 @@ const createOperator = async (admin_id, branch_id, login, password) => {
  */
 
 module.exports = {
+  selectOperatorAdmin,
   selectByName,
   selectByID_admin,
   createOperator,
   archive,
   statisticWorker,
+  selectAllAdmin,
 };
