@@ -1,5 +1,15 @@
-const { createShift, updateShift } = require("./model");
+const { createShift, updateShift, selectShift } = require("./model");
 
+const selectShiftCont = async (req, res) => {
+  try {
+    const result = await selectShift();
+    return res.status(200).json(result);
+  } catch (e) {
+    res
+      .status(500)
+      .json({ message: "error from selectShiftCont", error: e.message });
+  }
+};
 const createShiftCont = async (req, res) => {
   const { shift_number, start_time, end_time, description } = req.body;
   try {
@@ -43,4 +53,4 @@ const updateShiftCont = async (req, res) => {
   }
 };
 
-module.exports = { createShiftCont, updateShiftCont };
+module.exports = { selectShiftCont, createShiftCont, updateShiftCont };

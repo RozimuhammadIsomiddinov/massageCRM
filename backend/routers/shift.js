@@ -2,6 +2,7 @@ const express = require("express");
 const {
   createShiftCont,
   updateShiftCont,
+  selectShiftCont,
 } = require("../controllers/shift/shift");
 const auth = require("../middleware/auth");
 
@@ -77,6 +78,24 @@ const router = express.Router();
  *         description: Server error
  */
 
+/**
+ * @swagger
+ * /shift:
+ *   get:
+ *     summary: Get list of all shifts
+ *     tags: [Shift]
+ *     responses:
+ *       200:
+ *         description: List of shifts returned successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *       500:
+ *         description: Server error
+ */
+
+router.get("/", selectShiftCont);
 router.post("/create", auth("admin"), createShiftCont);
 router.put("/update/:id", auth("admin"), updateShiftCont);
 

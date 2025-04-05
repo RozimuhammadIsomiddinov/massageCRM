@@ -22,7 +22,19 @@ const updateShiftQuery = `
         WHERE id = ?
         RETURNING *;
 `;
+const selectShiftQuery = `
+    SELECT *FROM shift;
+`;
 
+const selectShift = async () => {
+  try {
+    const res = await knex.raw(selectShiftQuery);
+    return res.rows;
+  } catch (e) {
+    console.log("error from selectShift\t" + e.message);
+    throw e;
+  }
+};
 const createShift = async (shift_number, start_time, end_time, description) => {
   try {
     const res = await knex.raw(createShiftQuery, [
@@ -60,4 +72,4 @@ const updateShift = async (
   }
 };
 
-module.exports = { createShift, updateShift };
+module.exports = { createShift, updateShift, selectShift };
