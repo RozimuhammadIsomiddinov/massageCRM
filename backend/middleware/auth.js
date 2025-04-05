@@ -28,17 +28,15 @@ const auth = (requiredRole) => {
           user = await selectByIDSuper(decoded.id);
           break;
         default:
-          return res
-            .status(401)
-            .json({ error: "Noto'g'ri foydalanuvchi turi" });
+          return res.status(401).json({ error: "wrong user type" });
       }
 
       if (user.length == 0) {
-        return res.status(401).json({ error: "Foydalanuvchi topilmadi" });
+        return res.status(401).json({ error: "user not found" });
       }
       if (requiredRole && user[0].role !== requiredRole) {
         return res.status(403).json({
-          error: `Ushbu resursga kirish uchun ${requiredRole} bo'lishingiz kerak`,
+          error: `you must be at ${requiredRole}-role `,
           yourRole: user.role,
         });
       }
@@ -48,7 +46,7 @@ const auth = (requiredRole) => {
       next();
     } catch (e) {
       res.status(401).json({
-        error: "Yaroqsiz token",
+        error: "Invalid token",
         details: e.message,
       });
     }
