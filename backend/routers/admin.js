@@ -10,6 +10,7 @@ const {
   createOperatorCont,
   selectOperatorFilterCont,
 } = require("../controllers/super_admin/super_admin");
+const { filterSpendCont } = require("../controllers/spend/spend");
 
 const router = express.Router();
 /**
@@ -149,6 +150,66 @@ const router = express.Router();
 
 /**
  * @swagger
+ * /admin/spend:
+ *   get:
+ *     summary: Worker statistikasi
+ *     tags: [Admin]
+ *     parameters:
+ *       - in: query
+ *         name: from
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: true
+ *         description: Boshlang‘ich sana (YYYY-MM-DD)
+ *         example: "2024-01-01"
+ *       - in: query
+ *         name: to
+ *         schema:
+ *           type: string
+ *           format: date
+ *         required: true
+ *         description: Tugash sanasi (YYYY-MM-DD)
+ *         example: "2024-02-01"
+ *     responses:
+ *       200:
+ *         description: Muvoffaqiyatli natija
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   worker_id:
+ *                     type: integer
+ *                     description: Ishchi ID si
+ *                   worker_name:
+ *                     type: string
+ *                     description: Ishchi ismi
+ *                   cancelled:
+ *                     type: integer
+ *                     description: Bekor qilingan takliflar soni
+ *                   all_guest:
+ *                     type: integer
+ *                     description: Jami qabul qilingan mehmonlar soni
+ *                   income:
+ *                     type: number
+ *                     description: Jami daromad
+ *                   worker_part:
+ *                     type: number
+ *                     description: Ishchi ulushi (5%)
+ *                   total_working_hours:
+ *                     type: number
+ *                     description: Ishlangan soatlar (sekundlarda)
+ *       400:
+ *         description:  (missing params)
+ *       500:
+ *         description: Server xatosi
+ */
+
+/**
+ * @swagger
  * /admin/statistic-worker:
  *   get:
  *     summary: Worker statistikasi
@@ -207,6 +268,7 @@ const router = express.Router();
  *         description: Server xatosi
  */
 router.get("/control", auth("admin"), selectOperatorAdminCont);
+router.get("/spend", auth("admin"), filterSpendCont);
 router.get("/archive", auth("admin"), archiveCont);
 router.get("/statistic-worker", auth("admin"), statisticWorkerCont);
 router.post("/login", loginCont);
