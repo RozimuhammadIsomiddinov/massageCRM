@@ -316,16 +316,17 @@ const router = express.Router();
  *         description: Server error
  */
 
-router.get("/all-admin", /* auth("super_admin"), */ selectAllADminCont);
-router.get("/operator", /* auth("super_admin"), */ selectOperatorCont);
+router.get("/all-admin", auth("super_admin"), selectAllADminCont);
+router.get("/operator", auth("super_admin"), selectOperatorCont);
 
-router.post("/admin-filter", /* auth("super_admin"), */ selectAdminFilterCont);
-router.post("/operator-filter", /* auth("super_admin"), */ selectOperatorFilterCont);
+router.post("/admin-filter", auth("super_admin"), selectAdminFilterCont);
+router.post("/operator-filter", auth("super_admin"), selectOperatorFilterCont);
 
 router.post("/login", loginCont);
-router.post("/create-admin", /* auth("super_admin"), */ createAdminCont);
-router.post("/create-operator", /* auth("super_admin"), */ createOperatorCont);
+router.post("/create-admin", auth("super_admin"), createAdminCont);
+router.post("/create-operator", auth("super_admin"), createOperatorCont);
 
-router.put("/update-admin/:id", /* auth("super_admin"), */ updateAdminCont);
-router.put("/update-operator/:id", /* auth("super_admin"), */ updateOperatorCont);
+router.put("/update-admin/:id", auth("super_admin"), updateAdminCont);
+router.put("/update-operator/:id", auth("super_admin"), updateOperatorCont);
+
 module.exports = router;
