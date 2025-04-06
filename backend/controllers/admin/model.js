@@ -76,6 +76,7 @@ const statisticWorkerQuery = `
   SELECT 
     w.id AS worker_id,
     w.name AS worker_name,
+    COUNT(o.id) AS shift_count, -- smenalar soni
     COUNT(CASE WHEN o.is_cancelled = true THEN 1 END) AS cancelled,
     COUNT(o.id) AS all_guest,
     COALESCE(SUM(o.cost), 0) - COALESCE(SUM(sp.total_cost), 0) AS income,
