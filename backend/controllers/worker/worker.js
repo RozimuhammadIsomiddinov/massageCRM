@@ -1,7 +1,22 @@
 const { selectByID_branch } = require("../branch/model");
 const { selectByIDOperator } = require("../operators/model");
-const { createWorker, updateWorker, deleteWorker } = require("./model");
+const {
+  createWorker,
+  updateWorker,
+  deleteWorker,
+  selectAllWorker,
+} = require("./model");
 
+const selectAllWorkerCont = async (req, res) => {
+  try {
+    const result = await selectAllWorker();
+    return res.status(200).json(result);
+  } catch (e) {
+    res
+      .status(500)
+      .json({ message: "error from selectAllWorkerCont", error: e.message });
+  }
+};
 const createWorkerCont = async (req, res) => {
   const { branch_id, operator_id, town_id, name } = req.body;
 
@@ -75,4 +90,9 @@ const deleteWorkerCont = async (req, res) => {
       .json({ message: "error from deleteWorkerCont", error: e.message });
   }
 };
-module.exports = { createWorkerCont, updateWorkerCont, deleteWorkerCont };
+module.exports = {
+  selectAllWorkerCont,
+  createWorkerCont,
+  updateWorkerCont,
+  deleteWorkerCont,
+};

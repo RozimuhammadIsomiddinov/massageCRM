@@ -1,6 +1,20 @@
 require("dotenv").config();
 const knex = require("knex")(require("../../knexfile"));
 
+const selectAllWorkerQuery = `
+    SELECT 
+    w.id,
+    town.name AS town_name,
+    branch.name AS branch_name,
+    operator.login AS operator_name,
+    w.name
+    FROM worker AS w
+    JOIN town ON town.id = w.town_id
+    JOIN branch ON branch.id = w.branch_id
+    JOIN operator ON operator.id = w.operator_id
+    GROUP BY w.id, town_name, branch_name, operator_name, w.name;
+`;
+
 //kunlik pulni olish ishchi uchun
 const dailyAmountWorkerQuery = `
 SELECT 
@@ -45,6 +59,16 @@ const updateWorkerQuery = `
 const deleteWorkerQuery = `
     DELETE FROM worker WHERE id = ? RETURNING *;
 `;
+
+const selectAllWorker = async () => {
+  try {
+    const res = await knex.raw(selectAllWorkerQuery);
+    return res.rows;
+  } catch (e) {
+    console.log("error from selectAllWorker\t" + e.message);
+    throw e;
+  }
+};
 const createWorker = async (data) => {
   try {
     const res = await knex.raw(createWorkerQuery, [
@@ -85,4 +109,4 @@ const deleteWorker = async (id) => {
     throw e;
   }
 };
-module.exports = { createWorker, updateWorker, deleteWorker };
+module.exports = { selectAllWorker, createWorker, updateWorker, deleteWorker };

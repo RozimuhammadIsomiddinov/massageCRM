@@ -3,6 +3,7 @@ const {
   createWorkerCont,
   updateWorkerCont,
   deleteWorkerCont,
+  selectAllWorkerCont,
 } = require("../controllers/worker/worker");
 const auth = require("../middleware/auth");
 const router = express.Router();
@@ -11,6 +12,25 @@ const router = express.Router();
  * @swagger
  * tags:
  *   name: Worker
+ */
+
+/**
+ * @swagger
+ * /worker:
+ *   get:
+ *     summary: Get all Worker
+ *     tags: [Worker]
+ *     responses:
+ *       200:
+ *         description: List of all worker
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *       404:
+ *         description: worker not found
  */
 
 /**
@@ -120,6 +140,7 @@ const router = express.Router();
  *         description: Server xatosi
  */
 
+router.get("/", selectAllWorkerCont);
 router.post("/create", auth("operator"), createWorkerCont);
 router.put("/update/:id", auth("operator"), updateWorkerCont);
 router.delete("/delete/:id", auth("operator"), deleteWorkerCont);
