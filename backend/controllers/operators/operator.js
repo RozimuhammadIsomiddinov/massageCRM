@@ -3,6 +3,7 @@ const {
   selectByNameOperator,
   dailyAmount,
   balanceOperator,
+  selectMain,
 } = require("./model");
 const { generateJWT } = require("../../config/functions");
 
@@ -28,6 +29,16 @@ const loginCont = async (req, res) => {
   }
 };
 
+const selectMainCont = async (req, res) => {
+  try {
+    const result = await selectMain();
+    return res.status(200).json(result);
+  } catch (e) {
+    res
+      .status(500)
+      .json({ message: "error from selectMainCont", error: e.message });
+  }
+};
 const dailyAmountCont = async (req, res) => {
   try {
     const result = await dailyAmount();
@@ -51,4 +62,9 @@ const balanceOperatorCont = async (req, res) => {
       .json({ message: "error from balanceOperatorCont", error: e.message });
   }
 };
-module.exports = { loginCont, dailyAmountCont, balanceOperatorCont };
+module.exports = {
+  selectMainCont,
+  loginCont,
+  dailyAmountCont,
+  balanceOperatorCont,
+};

@@ -5,6 +5,27 @@ const selectByIDQuery = `
         SELECT *FROM operator WHERE id = ?;
 `;
 
+const selectMainQuery = `
+    SELECT 
+    o.id,
+    o.login,
+    of.cost,
+    w.id AS worker_id,
+    w.name AS worker_name,
+    b.name AS branch_name,
+    of.client_name,
+    of.is_cancelled,
+    of.cost * 0.06 AS operator_part,
+    s.start_time,
+    s.end_time
+    FROM operator AS o
+    JOIN worker AS w ON w.operator_id = o.id
+    JOIN branch AS b ON b.id = o.branch_id
+    JOIN offer AS of ON of.operator_id = o.id
+    JOIN operator_shift AS os ON os.operator_id = o.id
+    JOIN shift AS s ON s.id = os.shift_id;
+    `;
+
 const selectBy = `
   SELECT 
     o.id,
@@ -49,6 +70,15 @@ WHERE offer.is_cancelled = false
 GROUP BY operator.id, operator.login;
 `;
 
+const selectMain = async () => {
+  try {
+    const res = await knex.raw(selectMainQuery);
+    return res.rows;
+  } catch (e) {
+    console.log("error from selectMain\t" + e.message);
+    throw e;
+  }
+};
 const dailyAmount = async () => {
   try {
     const res = await knex.raw(dailyAmountQuery);
@@ -90,6 +120,7 @@ const selectByIDOperator = async (id) => {
 };
 
 module.exports = {
+  selectMain,
   selectByIDOperator,
   selectByNameOperator,
   dailyAmount,

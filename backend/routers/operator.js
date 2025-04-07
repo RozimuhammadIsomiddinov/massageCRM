@@ -5,6 +5,7 @@ const {
   loginCont,
   dailyAmountCont,
   balanceOperatorCont,
+  selectMainCont,
 } = require("../controllers/operators/operator");
 
 const router = express.Router();
@@ -108,7 +109,27 @@ const router = express.Router();
  *       500:
  *         description: Server error while fetching daily amount
  */
+/**
+ * @swagger
+ * /operator/main:
+ *   get:
+ *     summary: Get main amount statistics
+ *     tags: [Operators]
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved main amount
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 description: main data object
+ *       500:
+ *         description: Server error while fetching daily amount
+ */
 
+router.get("/main", selectMainCont);
 router.get("/balance/:id", auth("operator"), balanceOperatorCont);
 router.get("/daily", auth("operator"), dailyAmountCont);
 router.post("/login", loginCont);
