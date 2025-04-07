@@ -129,7 +129,7 @@ const router = express.Router();
  *         description: Server error while fetching daily amount
  */
 
-router.get("/main", selectMainCont);
+router.get("/main", auth("operator"), selectMainCont);
 router.get("/balance/:id", auth("operator"), balanceOperatorCont);
 router.get("/daily", auth("operator"), dailyAmountCont);
 router.post("/login", loginCont);
