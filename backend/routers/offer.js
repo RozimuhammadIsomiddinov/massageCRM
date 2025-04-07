@@ -45,10 +45,10 @@ const router = express.Router();
  *             properties:
  *               start_time:
  *                 type: string
- *                 format: date-time
+ *                 example: "8:00:05"
  *               end_time:
  *                 type: string
- *                 format: date-time
+ *                 example: "10:00:05"
  *               cost:
  *                 type: number
  *               admin_id:
