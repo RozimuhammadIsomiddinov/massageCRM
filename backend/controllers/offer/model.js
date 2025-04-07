@@ -35,6 +35,16 @@ const updateIntervalQuery = `
     RETURNING *;
 `;
 
+const cancelledQuery = `
+      UPDATE offer
+        SET is_cancelled = 
+        CASE 
+            WHEN is_cancelled = false THEN true
+            ELSE false
+        END
+      WHERE id = ? 
+      RETURNING *;
+`;
 const deleteOfferQuery = `
     DELETE FROM offer WHERE id = ? RETURNING*;
 `;
@@ -81,6 +91,16 @@ const updateOffer = async (id, prolongation) => {
     throw e;
   }
 };
+
+const cancelled = async (offer_id) => {
+  try {
+    const res = await knex.raw(cancelledQuery, [offer_id]);
+    return res.rows;
+  } catch (e) {
+    console.log("error from cancelled\t" + e.message);
+    throw e;
+  }
+};
 const deleteOffer = async (id) => {
   try {
     const res = await knex.raw(deleteOfferQuery, [id]);
@@ -91,6 +111,7 @@ const deleteOffer = async (id) => {
   }
 };
 module.exports = {
+  cancelled,
   createOffer,
   updateOffer,
   deleteOffer,

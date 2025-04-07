@@ -3,6 +3,7 @@ const {
   createOfferCont,
   deleteOfferCont,
   updateOfferCont,
+  cancelledOfferCont,
 } = require("../controllers/offer/offer");
 const upload = require("../middleware/multer");
 const {
@@ -119,6 +120,28 @@ const router = express.Router();
 
 /**
  * @swagger
+ * /offer/cancel/{offer_id}:
+ *   delete:
+ *     summary: cancel an offer
+ *     tags: [Offer]
+ *     parameters:
+ *       - in: path
+ *         name: offer_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Offer ID
+ *     responses:
+ *       200:
+ *         description: Offer canelled successfully
+ *       404:
+ *         description: Offer already cancelled
+ *       500:
+ *         description: Server error
+ */
+
+/**
+ * @swagger
  * /offer/file/{id}:
  *   get:
  *     summary: Get all files (or by offer_id if added)
@@ -217,4 +240,5 @@ router.put(
 router.post("/create", auth("operator"), createOfferCont);
 router.put("/update/:id", auth("operator"), updateOfferCont);
 router.delete("/delete/:id", auth("operator"), deleteOfferCont);
+router.delete("/cancel/:offer_id", cancelledOfferCont);
 module.exports = router;

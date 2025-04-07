@@ -1,4 +1,4 @@
-const { createOffer, deleteOffer, updateOffer } = require("./model");
+const { createOffer, deleteOffer, updateOffer, cancelled } = require("./model");
 
 const createOfferCont = async (req, res) => {
   const {
@@ -45,6 +45,18 @@ const updateOfferCont = async (req, res) => {
       .json({ message: "error from updateOfferCont", error: e.message });
   }
 };
+
+const cancelledOfferCont = async (req, res) => {
+  const { offer_id } = req.params;
+  try {
+    const result = await cancelled(offer_id);
+    return res.status(200).json(result);
+  } catch (e) {
+    res
+      .status(500)
+      .json({ message: "error from cancelledCont", error: e.message });
+  }
+};
 const deleteOfferCont = async (req, res) => {
   const { id } = req.params;
   try {
@@ -59,4 +71,9 @@ const deleteOfferCont = async (req, res) => {
       .json({ message: "error from deleteOfferCont", error: e.message });
   }
 };
-module.exports = { createOfferCont, deleteOfferCont, updateOfferCont };
+module.exports = {
+  createOfferCont,
+  deleteOfferCont,
+  updateOfferCont,
+  cancelledOfferCont,
+};
