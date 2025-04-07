@@ -240,5 +240,5 @@ router.put(
 router.post("/create", auth("operator"), createOfferCont);
 router.put("/update/:id", auth("operator"), updateOfferCont);
 router.delete("/delete/:id", auth("operator"), deleteOfferCont);
-router.delete("/cancel/:offer_id", cancelledOfferCont);
+router.delete("/cancel/:offer_id", auth("operator"), cancelledOfferCont);
 module.exports = router;
