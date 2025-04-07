@@ -79,8 +79,9 @@ const statisticWorkerQuery = `
     COUNT(o.id) AS shift_count, -- smenalar soni
     COUNT(CASE WHEN o.is_cancelled = true THEN 1 END) AS cancelled,
     COUNT(o.id) AS all_guest,
-    COALESCE(SUM(o.cost), 0) - COALESCE(SUM(sp.total_cost), 0) AS income,
+    COALESCE(SUM(o.cost), 0) - COALESCE(SUM(sp.total_cost), 0) AS profit,
     (COALESCE(SUM(o.cost), 0) - COALESCE(SUM(sp.total_cost), 0)) * 0.25 AS worker_part,
+    COALESCE(SUM(o.cost), 0) AS income,
     COALESCE(
         SUM(EXTRACT(EPOCH FROM (o.end_time - o.start_time))), 
         0
@@ -93,7 +94,8 @@ LEFT JOIN (
     GROUP BY worker_id
 ) AS sp ON sp.worker_id = w.id
 WHERE o.created_at >= ?  
-  AND o.created_at <= ?   
+  AND o.created_at <= ?
+  AND o.is_cancelled = false
 GROUP BY w.id, w.name
 ORDER BY total_working_hours DESC;
 
