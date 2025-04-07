@@ -12,6 +12,7 @@ const {
 const { generateJWT } = require("../../config/functions");
 const { selectByID_branch } = require("../branch/model");
 const { selectByID_admin } = require("../admin/model");
+const { selectShiftByNumber } = require("../shift/model");
 
 const loginCont = async (req, res) => {
   const { login, password } = req.body;
@@ -101,10 +102,14 @@ const createOperatorCont = async (req, res) => {
   try {
     const result1 = await selectByID_branch(branch_id);
     const result2 = await selectByID_admin(admin_id);
+    const result3 = await selectShiftByNumber(shifts);
     if (!result1)
       return res.status(400).json({ message: "incorrect branch_id" });
     if (!result2)
       return res.status(400).json({ message: "incorrect admin_id" });
+    if (!result3 || result3.length !== shifts.length) {
+      return res.status(400).json({ message: "incorrect shift number" });
+    }
 
     const result = await createOperator(
       branch_id,

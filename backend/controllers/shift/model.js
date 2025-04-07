@@ -25,13 +25,25 @@ const updateShiftQuery = `
 const selectShiftQuery = `
     SELECT *FROM shift;
 `;
-
+const selectShiftByNumberQuery = `
+  SELECT * FROM shift WHERE shift_number = ANY(?);
+`;
 const selectShift = async () => {
   try {
     const res = await knex.raw(selectShiftQuery);
     return res.rows;
   } catch (e) {
     console.log("error from selectShift\t" + e.message);
+    throw e;
+  }
+};
+
+const selectShiftByNumber = async (id) => {
+  try {
+    const res = await knex.raw(selectShiftByNumberQuery, [id]);
+    return res.rows;
+  } catch (e) {
+    console.log("error from selectShiftByNumber\t" + e.message);
     throw e;
   }
 };
@@ -72,4 +84,4 @@ const updateShift = async (
   }
 };
 
-module.exports = { createShift, updateShift, selectShift };
+module.exports = { selectShiftByNumber, createShift, updateShift, selectShift };

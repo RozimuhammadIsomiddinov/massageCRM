@@ -82,10 +82,16 @@ const router = express.Router();
  *               - admin_id
  *               - login
  *               - password
+ *               - town_id
+ *               - shifts
  *             properties:
  *               branch_id:
  *                 type: integer
  *                 description: ID of the branch the operator belongs to
+ *                 example: 2
+ *               town_id:
+ *                 type: integer
+ *                 description: ID of the town the operator belongs to
  *                 example: 2
  *               admin_id:
  *                 type: integer
@@ -98,7 +104,13 @@ const router = express.Router();
  *               password:
  *                 type: string
  *                 description: Password for the new operator
- *                 example: strongPass#2025
+ *                 example: strongPass
+ *               shifts:
+ *                 type: array
+ *                 description: Array of shifts assigned to the operator
+ *                 items:
+ *                   type: string
+ *                 example: [1,2]
  *     responses:
  *       201:
  *         description: Operator successfully created
@@ -114,6 +126,7 @@ const router = express.Router();
  *       500:
  *         description: Server error
  */
+
 /**
  * @swagger
  * /admin/archive:
