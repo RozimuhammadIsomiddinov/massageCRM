@@ -317,7 +317,7 @@ const router = express.Router();
  */
 
 router.get("/all-admin", auth("super_admin"), selectAllADminCont);
-router.get("/operator", auth("super_admin"), selectOperatorCont);
+router.get("/operator", /*  auth("super_admin"), */ selectOperatorCont);
 
 router.post("/admin-filter", auth("super_admin"), selectAdminFilterCont);
 router.post("/operator-filter", auth("super_admin"), selectOperatorFilterCont);
