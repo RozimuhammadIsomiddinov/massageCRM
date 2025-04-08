@@ -53,7 +53,8 @@ const createOperatorQuery = `
 `;
 
 const archiveQuery = `
-    SELECT 
+    SELECT
+    offer.id,
     o.login,
     offer.is_cancelled AS status,
     DATE_TRUNC('month', offer.created_at) AS month,
