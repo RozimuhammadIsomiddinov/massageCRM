@@ -19,11 +19,12 @@ const selectMainQuery = `
     s.start_time,
     s.end_time
     FROM operator AS o
-    JOIN worker AS w ON w.operator_id = o.id
-    JOIN branch AS b ON b.id = o.branch_id
-    JOIN offer AS of ON of.operator_id = o.id
-    JOIN operator_shift AS os ON os.operator_id = o.id
-    JOIN shift AS s ON s.id = os.shift_id;
+    LEFT JOIN worker AS w ON w.operator_id = o.id
+    LEFT JOIN branch AS b ON b.id = o.branch_id
+    LEFT JOIN offer AS of ON of.operator_id = o.id
+    LEFT JOIN operator_shift AS os ON os.operator_id = o.id
+    LEFT JOIN shift AS s ON s.id = os.shift_id
+    ORDER BY of.id, w.id NULLS LAST;
     `;
 
 const selectBy = `
