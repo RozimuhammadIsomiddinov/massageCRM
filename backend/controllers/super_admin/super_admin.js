@@ -66,9 +66,9 @@ const createAdminCont = async (req, res) => {
 
 const updateAdminCont = async (req, res) => {
   const { id } = req.params;
-  const { branch_id, login, password } = req.body;
+  const { branch_id /* login, password */ } = req.body;
   try {
-    const result = await updateAdmin(id, branch_id, login, password);
+    const result = await updateAdmin(id, branch_id /* login, password */);
     return res.status(200).json(result[0]);
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -130,16 +130,16 @@ const createOperatorCont = async (req, res) => {
 
 const updateOperatorCont = async (req, res) => {
   const { id } = req.params;
-  const { branch_id, login, password, town_id } = req.body;
-  if (!branch_id || !login || !password || !town_id)
+  const { branch_id, /* login, password, */ town_id } = req.body;
+  if (!branch_id || /* !login || !password || */ !town_id)
     return res.status(400).json({ message: "fill all fields" });
   try {
     const result = await updateOperator(
       id,
       branch_id,
-      town_id,
-      login,
-      password
+      town_id
+      /*  login,
+      password */
     );
     return res.status(200).json(result[0]);
   } catch (e) {

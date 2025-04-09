@@ -256,15 +256,9 @@ const router = express.Router();
  *             type: object
  *             required:
  *               - branch_id
- *               - login
- *               - password
  *             properties:
  *               branch_id:
  *                 type: integer
- *               login:
- *                 type: string
- *               password:
- *                 type: string
  *     responses:
  *       200:
  *         description: Admin updated successfully
@@ -296,17 +290,12 @@ const router = express.Router();
  *             required:
  *               - branch_id
  *               - town_id
- *               - login
- *               - password
  *             properties:
  *               branch_id:
  *                 type: integer
  *               town_id:
  *                 type: integer
- *               login:
- *                 type: string
- *               password:
- *                 type: string
+
  *     responses:
  *       200:
  *         description: Operator updated successfully

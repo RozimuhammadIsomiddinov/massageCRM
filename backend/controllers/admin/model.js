@@ -69,7 +69,7 @@ WHERE offer.start_time >= ?
   AND offer.end_time <= ?
   AND offer.created_at >= DATE_TRUNC('month', CURRENT_DATE)
   AND offer.created_at < DATE_TRUNC('month', CURRENT_DATE) + INTERVAL '1 month'
-GROUP BY o.login, status, month;
+GROUP BY o.login, status, month, offer.id;
 
  `;
 

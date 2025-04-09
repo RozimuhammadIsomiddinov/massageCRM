@@ -51,8 +51,6 @@ const updateAdminQuery = `
         UPDATE admin
           SET 
             branch_id = ?,
-            login = ?,
-            password = ?,
             updated_at = NOW()
         WHERE id = ?
         RETURNING *;
@@ -124,8 +122,6 @@ const updateOperatorQuery = `
       SET 
       branch_id = ?,
       town_id = ?,
-      login = ?,
-      password = ?,
       updated_at = NOW()
     WHERE id = ?
     RETURNING *;
@@ -195,13 +191,13 @@ const createAdmin = async (branch_id, login, password) => {
   }
 };
 
-const updateAdmin = async (id, brach_id, login, password) => {
+const updateAdmin = async (id, brach_id /* login, password */) => {
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const res = await knex.raw(updateAdminQuery, [
+    /*     const hashedPassword = await bcrypt.hash(password, 10);
+     */ const res = await knex.raw(updateAdminQuery, [
       brach_id,
-      login,
-      hashedPassword,
+      /*   login,
+      hashedPassword, */
       id,
     ]);
     return res.rows;
@@ -251,15 +247,15 @@ const createOperator = async (
   }
 };
 
-const updateOperator = async (id, branch_id, town_id, login, password) => {
+const updateOperator = async (id, branch_id, town_id /* login, password */) => {
   try {
-    const hashedPassword = await bcrypt.hash(password, 10);
-
+    /*     const hashedPassword = await bcrypt.hash(password, 10);
+     */
     const res = await knex.raw(updateOperatorQuery, [
       branch_id,
       town_id,
-      login,
-      hashedPassword,
+      /*  login,
+      hashedPassword, */
       id,
     ]);
     return res.rows;
