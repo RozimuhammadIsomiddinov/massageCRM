@@ -280,12 +280,12 @@ const router = express.Router();
  *       500:
  *         description: Server xatosi
  */
-router.get("/control", auth("admin"), selectOperatorAdminCont);
-router.get("/spend", auth("admin"), filterSpendCont);
-router.get("/archive", auth("admin"), archiveCont);
-router.get("/statistic-worker", auth("admin"), statisticWorkerCont);
+router.get("/control" /* , auth("admin") */, selectOperatorAdminCont);
+router.get("/spend" /*, auth("admin")*/, filterSpendCont);
+router.get("/archive" /*, auth("admin")*/, archiveCont);
+router.get("/statistic-worker" /*, auth("admin")*/, statisticWorkerCont);
 router.post("/login", loginCont);
-router.post("/operator-filter", auth("admin"), selectOperatorFilterCont);
-router.post("/add-operator", auth("admin"), createOperatorCont);
+router.post("/operator-filter" /*, auth("admin")*/, selectOperatorFilterCont);
+router.post("/add-operator" /*, auth("admin")*/, createOperatorCont);
 
 module.exports = router;

@@ -51,5 +51,5 @@ const router = express.Router();
  *         description: Server xatosi
  */
 
-router.post("/create", auth("admin"), createSpendCont);
+router.post("/create" /* , auth("admin"), */, createSpendCont);
 module.exports = router;

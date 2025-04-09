@@ -141,7 +141,7 @@ const router = express.Router();
  */
 
 router.get("/", selectAllWorkerCont);
-router.post("/create", auth("operator"), createWorkerCont);
-router.put("/update/:id", auth("operator"), updateWorkerCont);
-router.delete("/delete/:id", auth("operator"), deleteWorkerCont);
+router.post("/create", /*, auth("operator")*/ createWorkerCont);
+router.put("/update/:id", /*, auth("operator")*/ updateWorkerCont);
+router.delete("/delete/:id", /*, auth("operator")*/ deleteWorkerCont);
 module.exports = router;

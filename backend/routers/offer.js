@@ -224,21 +224,21 @@ const router = express.Router();
  *         description: Server error
  */
 
-router.get("/file/:id", auth("operator"), selectFileCont);
+router.get("/file/:id", /*, auth("operator")*/ selectFileCont);
 router.post(
   "/create-file/:offer_id",
-  auth("operator"),
+  /*, auth("operator")*/
   upload.single("file"),
   createFileCont
 );
 router.put(
   "/update-file/:id",
-  auth("operator"),
+  /*, auth("operator")*/
   upload.single("file"),
   updateFileCont
 );
-router.post("/create", auth("operator"), createOfferCont);
-router.put("/update/:id", auth("operator"), updateOfferCont);
-router.delete("/delete/:id", auth("operator"), deleteOfferCont);
-router.delete("/cancel/:offer_id", auth("operator"), cancelledOfferCont);
+router.post("/create", /*, auth("operator")*/ createOfferCont);
+router.put("/update/:id", /*, auth("operator")*/ updateOfferCont);
+router.delete("/delete/:id", /*, auth("operator")*/ deleteOfferCont);
+router.delete("/cancel/:offer_id", /*, auth("operator")*/ cancelledOfferCont);
 module.exports = router;

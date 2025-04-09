@@ -96,7 +96,7 @@ const router = express.Router();
  */
 
 router.get("/", selectShiftCont);
-router.post("/create", auth("admin"), createShiftCont);
-router.put("/update/:id", auth("admin"), updateShiftCont);
+router.post("/create", /* auth("admin"), */ createShiftCont);
+router.put("/update/:id", /* auth("admin"), */ updateShiftCont);
 
 module.exports = router;
