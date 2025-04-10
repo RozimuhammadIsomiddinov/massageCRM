@@ -12,6 +12,7 @@ const selectMainQuery = `
     of.id AS offer_id,
     of.description,
     of.cost,
+    of.prolongation,
     w.id AS worker_id,
     w.name AS worker_name,
     b.name AS branch_name,
