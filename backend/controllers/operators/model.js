@@ -9,6 +9,7 @@ const selectMainQuery = `
     SELECT 
     o.id,
     o.login,
+    of.id AS offer_id,
     of.cost,
     w.id AS worker_id,
     w.name AS worker_name,
