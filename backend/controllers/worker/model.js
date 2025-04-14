@@ -7,6 +7,7 @@ const selectAllWorkerQuery = `
     town.name AS town_name,
     branch.name AS branch_name,
     operator.login AS operator_name,
+    w.percent,
     w.name
     FROM worker AS w
     JOIN town ON town.id = w.town_id
