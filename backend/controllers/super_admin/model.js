@@ -28,7 +28,7 @@ const selectAdminFilterQuery = `
       b.name AS branch_name,
       COALESCE(SUM(EXTRACT(EPOCH FROM (s.end_time - s.start_time))), 0) AS total_working_hours,
       COALESCE(SUM(offer.cost), 0) AS income,
-      (COALESCE(SUM(offer.cost), 0)) *a.percent*0.01 AS salary
+      (COALESCE(SUM(offer.cost), 0)) *admin.percent*0.01 AS salary
   FROM branch AS b
   LEFT JOIN operator o ON o.branch_id = b.id
   LEFT JOIN operator_shift os ON os.operator_id = o.id
