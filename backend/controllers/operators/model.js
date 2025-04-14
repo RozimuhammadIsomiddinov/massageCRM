@@ -55,7 +55,7 @@ const dailyAmountQuery = `
   DATE(offer.created_at) AS date,
   SUM(offer.cost) AS total_amount
 FROM offer
-JOIN operator ON offer.operator_id = operator.id
+LEFT JOIN operator ON offer.operator_id = operator.id
 WHERE offer.is_cancelled = false
   AND DATE(offer.created_at) = CURRENT_DATE
 GROUP BY operator.id, operator.login, DATE(offer.created_at);
@@ -67,7 +67,7 @@ const twoWeaksQuery = `
   operator.login,
   SUM(offer.cost) AS total_amount
 FROM offer
-JOIN operator ON offer.operator_id = operator.id
+LEFT JOIN operator ON offer.operator_id = operator.id
 WHERE offer.is_cancelled = false
   AND offer.created_at >= CURRENT_DATE - INTERVAL '14 days'
   AND operator.id = ?
