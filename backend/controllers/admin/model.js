@@ -10,6 +10,7 @@ const selectAllAdminQuery = `
       b.name AS branch_name,
       a.role,
       a.password,
+      a.percent,
       a.created_at,
       a.updated_at
       FROM admin AS a 
@@ -22,6 +23,7 @@ const selectBy = `
         SELECT 
         a.id,
         a.login,
+        a.percent,
         b.name AS branch_name,
         a.role,
         a.password,
@@ -35,9 +37,10 @@ const selectBy = `
 const createadminQuery = `
         INSERT INTO admin (
         login ,
-        password
+        password,
+        percent
         )
-        VALUES(?,?)
+        VALUES(?,?,?)
         RETURNING *;
 `;
 
@@ -46,9 +49,10 @@ const createOperatorQuery = `
     admin_id,
     branch_id,
     login,
+    percent,
     password
     )
-    VALUES(?,?,?,?)
+    VALUES(?,?,?,?,?)
     RETURNING *;
 `;
 
@@ -58,13 +62,13 @@ const archiveQuery = `
     o.login,
     offer.is_cancelled AS status,
     DATE_TRUNC('month', offer.created_at) AS month,
-    COALESCE(SUM(offer.cost) * 0.05, 0) AS income,
+    COALESCE(SUM(offer.cost) * o.percent *0.01, 0) AS income,
     COALESCE(
         SUM(EXTRACT(EPOCH FROM (offer.end_time - offer.start_time))), 
         0
     ) AS working_hours
 FROM operator AS o
-JOIN offer ON offer.operator_id = o.id
+LEFT JOIN offer ON offer.operator_id = o.id
 WHERE offer.start_time >= ?
   AND offer.end_time <= ?
   AND offer.created_at >= DATE_TRUNC('month', CURRENT_DATE)
@@ -81,7 +85,7 @@ const statisticWorkerQuery = `
     COUNT(CASE WHEN o.is_cancelled = true THEN 1 END) AS cancelled,
     COUNT(o.id) AS all_guest,
     COALESCE(SUM(o.cost), 0) - COALESCE(SUM(sp.total_cost), 0) AS profit,
-    (COALESCE(SUM(o.cost), 0) - COALESCE(SUM(sp.total_cost), 0)) * 0.25 AS worker_part,
+    (COALESCE(SUM(o.cost), 0) - COALESCE(SUM(sp.total_cost), 0)) * w.percent *0.01 AS worker_part,
     COALESCE(SUM(o.cost), 0) AS income,
     COALESCE(
         SUM(EXTRACT(EPOCH FROM (o.end_time - o.start_time))), 
@@ -111,12 +115,13 @@ SELECT
     COALESCE(SUM(offer.end_time - offer.start_time), INTERVAL '0') AS working_time,
     COALESCE(SUM(offer.cost), 0) AS total_amount,
     COALESCE(SUM(offer.cost), 0) - COALESCE(SUM(spend.cost), 0) AS without_spend,
-    COALESCE(SUM(offer.cost), 0) - COALESCE(SUM(spend.cost), 0) *0.31  AS payment,
-    COALESCE(SUM(offer.cost), 0) + 0.05 AS cash,
-    COALESCE(SUM(offer.cost), 0) + 0.05 - 0.05 AS result,
-    COALESCE(SUM(offer.cost), 0) * 0.5 AS operator_part
+    COALESCE(SUM(offer.cost), 0) - COALESCE(SUM(spend.cost), 0) *(o.percent + w.percent)*0.01  AS payment,
+    COALESCE(SUM(offer.cost), 0) + 0.05 AS cash, --o'zgartirish kerak
+    COALESCE(SUM(offer.cost), 0) + 0.05 - 0.05 AS result, --o'zgartirish kerak
+    COALESCE(SUM(offer.cost), 0) * o.percent AS operator_part
 FROM operator AS o
 LEFT JOIN branch AS b ON o.branch_id = b.id
+LEFT JOIN worker AS w ON w.operator_id = o.id
 LEFT JOIN offer ON o.id = offer.operator_id
 LEFT JOIN town ON town.id = o.town_id
 LEFT JOIN spend ON spend.operator_id = o.id
@@ -203,7 +208,13 @@ const createAdmin = async () => {
 };
 
 //create operator by admin
-const createOperator = async (admin_id, branch_id, login, password) => {
+const createOperator = async (
+  admin_id,
+  percent = 25,
+  branch_id,
+  login,
+  password
+) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -212,6 +223,7 @@ const createOperator = async (admin_id, branch_id, login, password) => {
       branch_id,
       login,
       hashedPassword,
+      percent,
     ]);
     return res.rows;
   } catch (e) {

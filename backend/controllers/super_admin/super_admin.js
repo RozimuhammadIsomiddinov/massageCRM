@@ -46,15 +46,15 @@ const selectAdminFilterCont = async (req, res) => {
   }
 };
 const createAdminCont = async (req, res) => {
-  const { branch_id, login, password } = req.body;
-  if (!branch_id || !login || !password)
+  const { branch_id, login, percent, password } = req.body;
+  if (!branch_id || !login || !password || !percent)
     return res.status(400).json({ message: "fill all fields" });
   try {
     const result1 = await selectByID_branch(branch_id);
     if (!result1)
       return res.status(400).json({ message: "incorrect branch_id" });
 
-    const result = await createAdmin(branch_id, login, password);
+    const result = await createAdmin(branch_id, percent, login, password);
 
     if (!result) return res.status(404).json({ message: "unsuccesfully" });
 
@@ -66,9 +66,13 @@ const createAdminCont = async (req, res) => {
 
 const updateAdminCont = async (req, res) => {
   const { id } = req.params;
-  const { branch_id /* login, password */ } = req.body;
+  const { branch_id /* login, password */, percent } = req.body;
   try {
-    const result = await updateAdmin(id, branch_id /* login, password */);
+    const result = await updateAdmin(
+      id,
+      branch_id,
+      percent /* login, password */
+    );
     return res.status(200).json(result[0]);
   } catch (e) {
     res.status(500).json({ error: e.message });
@@ -95,8 +99,17 @@ const selectOperatorFilterCont = async (req, res) => {
 };
 
 const createOperatorCont = async (req, res) => {
-  const { branch_id, admin_id, town_id, login, password, shifts } = req.body;
-  if (!branch_id || !login || !town_id || !password || !admin_id || !shifts)
+  const { branch_id, admin_id, town_id, percent, login, password, shifts } =
+    req.body;
+  if (
+    !branch_id ||
+    !login ||
+    !town_id ||
+    !password ||
+    !admin_id ||
+    !shifts ||
+    !percent
+  )
     return res.status(400).json({ message: "fill all fields" });
 
   try {
@@ -117,6 +130,7 @@ const createOperatorCont = async (req, res) => {
       admin_id,
       login,
       password,
+      percent,
       shifts
     );
 
@@ -130,16 +144,17 @@ const createOperatorCont = async (req, res) => {
 
 const updateOperatorCont = async (req, res) => {
   const { id } = req.params;
-  const { branch_id, /* login, password, */ town_id } = req.body;
+  const { branch_id, /* login, password, */ town_id, percent } = req.body;
   if (!branch_id || /* !login || !password || */ !town_id)
     return res.status(400).json({ message: "fill all fields" });
   try {
     const result = await updateOperator(
       id,
       branch_id,
-      town_id
+      town_id,
       /*  login,
       password */
+      percent
     );
     return res.status(200).json(result[0]);
   } catch (e) {

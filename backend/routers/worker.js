@@ -50,6 +50,7 @@ const router = express.Router();
  *               - operator_id
  *               - town_id
  *               - name
+ *               - percent
  *             properties:
  *               branch_id:
  *                 type: integer
@@ -60,6 +61,9 @@ const router = express.Router();
  *               operator_id:
  *                 type: integer
  *                 example: 2
+ *               percent:
+ *                 type: integer
+ *                 example: 25
  *               name:
  *                 type: string
  *                 example: Ali Valiyev
@@ -96,6 +100,7 @@ const router = express.Router();
  *               - operator_id
  *               - town_id
  *               - name
+ *               - percent
  *             properties:
  *               branch_id:
  *                 type: integer
@@ -106,6 +111,9 @@ const router = express.Router();
  *               operator_id:
  *                 type: integer
  *                 example: 2
+ *               percent:
+ *                 type: integer
+ *                 example: 25
  *               name:
  *                 type: string
  *                 example: Ali Valiyev

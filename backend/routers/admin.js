@@ -83,6 +83,7 @@ const router = express.Router();
  *               - login
  *               - password
  *               - town_id
+ *               - percent
  *               - shifts
  *             properties:
  *               branch_id:
@@ -105,6 +106,10 @@ const router = express.Router();
  *                 type: string
  *                 description: Password for the new operator
  *                 example: strongPass
+ *               percent:
+ *                 type: integer
+ *                 description: percent
+ *                 example: 25
  *               shifts:
  *                 type: array
  *                 description: Array of shifts assigned to the operator

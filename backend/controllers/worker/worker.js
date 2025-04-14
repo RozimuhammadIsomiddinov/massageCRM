@@ -18,9 +18,9 @@ const selectAllWorkerCont = async (req, res) => {
   }
 };
 const createWorkerCont = async (req, res) => {
-  const { branch_id, operator_id, town_id, name } = req.body;
+  const { branch_id, percent, operator_id, town_id, name } = req.body;
 
-  if (!branch_id || !operator_id || !town_id || !name) {
+  if (!branch_id || !operator_id || !town_id || !name || !percent) {
     return res.status(400).json({ message: "fill all fields" });
   }
 
@@ -37,6 +37,7 @@ const createWorkerCont = async (req, res) => {
       branch_id,
       operator_id,
       town_id,
+      percent,
       name,
     });
     return res.status(201).json(result[0]);
@@ -49,9 +50,9 @@ const createWorkerCont = async (req, res) => {
 
 const updateWorkerCont = async (req, res) => {
   const { id } = req.params;
-  const { branch_id, operator_id, name, town_id } = req.body;
+  const { branch_id, percent, operator_id, name, town_id } = req.body;
 
-  if (!branch_id || !operator_id || !name || !town_id) {
+  if (!branch_id || !operator_id || !name || !town_id || !percent) {
     return res.status(400).json({ message: "fill all fields" });
   }
 
@@ -65,7 +66,7 @@ const updateWorkerCont = async (req, res) => {
       return res.status(404).json({ message: "operator not found" });
 
     const result = await updateWorker(
-      { branch_id, operator_id, name, town_id },
+      { branch_id, operator_id, percent, name, town_id },
       id
     );
     return res.status(200).json(result[0]);

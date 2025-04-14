@@ -175,6 +175,7 @@ const router = express.Router();
  *               - branch_id
  *               - login
  *               - password
+ *               - percent
  *             properties:
  *               branch_id:
  *                 type: integer
@@ -182,6 +183,8 @@ const router = express.Router();
  *                 type: string
  *               password:
  *                 type: string
+ *               percent:
+ *                 type: number
  *     responses:
  *       201:
  *         description: Admin created successfully
@@ -209,6 +212,7 @@ const router = express.Router();
  *               - town_id
  *               - login
  *               - password
+ *               - percent
  *               - shifts
  *             properties:
  *               branch_id:
@@ -221,6 +225,8 @@ const router = express.Router();
  *                 type: string
  *               password:
  *                 type: string
+ *               percent:
+ *                 type: number
  *               shifts:
  *                 type: array
  *                 items:
@@ -256,8 +262,11 @@ const router = express.Router();
  *             type: object
  *             required:
  *               - branch_id
+ *               - percent
  *             properties:
  *               branch_id:
+ *                 type: integer
+ *               percent:
  *                 type: integer
  *     responses:
  *       200:
@@ -290,10 +299,13 @@ const router = express.Router();
  *             required:
  *               - branch_id
  *               - town_id
+ *               - percent
  *             properties:
  *               branch_id:
  *                 type: integer
  *               town_id:
+ *                 type: integer
+ *               percent:
  *                 type: integer
 
  *     responses:

@@ -28,7 +28,7 @@ const selectAdminFilterQuery = `
       b.name AS branch_name,
       COALESCE(SUM(EXTRACT(EPOCH FROM (s.end_time - s.start_time))), 0) AS total_working_hours,
       COALESCE(SUM(offer.cost), 0) AS income,
-      (COALESCE(SUM(offer.cost), 0)) *0.05 AS salary
+      (COALESCE(SUM(offer.cost), 0)) *a.percent*0.01 AS salary
   FROM branch AS b
   LEFT JOIN operator o ON o.branch_id = b.id
   LEFT JOIN operator_shift os ON os.operator_id = o.id
@@ -42,15 +42,17 @@ const createAdminQuery = `
         INSERT INTO admin (
         branch_id ,
         login ,
-        password
+        password,
+        percent
         )
-        VALUES(?,?,?)
+        VALUES(?,?,?,?)
         RETURNING *;
 `;
 const updateAdminQuery = `
         UPDATE admin
           SET 
             branch_id = ?,
+            percent = ?,
             updated_at = NOW()
         WHERE id = ?
         RETURNING *;
@@ -82,12 +84,13 @@ const selectOperatorFilterQuery = `
     COALESCE(SUM(offer.end_time - offer.start_time), INTERVAL '0') AS working_time,
     COALESCE(SUM(offer.cost), 0) AS total_amount,
     COALESCE(SUM(offer.cost), 0) - COALESCE(SUM(spend.cost), 0) AS without_spend,
-    COALESCE(SUM(offer.cost), 0) - COALESCE(SUM(spend.cost), 0) *0.31  AS payment,
-    COALESCE(SUM(offer.cost), 0) + 0.05 AS cash,
-    COALESCE(SUM(offer.cost), 0) + 0.05 - 0.05 AS result,
-    COALESCE(SUM(offer.cost), 0) * 0.5 AS operator_part
+    COALESCE(SUM(offer.cost), 0) - COALESCE(SUM(spend.cost), 0) *(w.percent + o.percent)*0.01 AS payment,
+    COALESCE(SUM(offer.cost), 0) + o.percent AS cash,
+    COALESCE(SUM(offer.cost), 0) +o.percent - w.percent AS result,
+    COALESCE(SUM(offer.cost), 0) * o.percent AS operator_part
 FROM operator AS o
 LEFT JOIN branch AS b ON o.branch_id = b.id
+LEFT JOIN worker AS w ON w.operator_id = o.id
 LEFT JOIN offer ON o.id = offer.operator_id
 LEFT JOIN town ON town.id = o.town_id
 LEFT JOIN spend ON spend.operator_id = o.id
@@ -101,9 +104,10 @@ const createOperatorQuery = `
     admin_id,
     town_id,
     login,
-    password
+    password,
+    percent
     )
-    VALUES(?,?,?,?,?)
+    VALUES(?,?,?,?,?,?)
     RETURNING *;
 `;
 
@@ -122,6 +126,7 @@ const updateOperatorQuery = `
       SET 
       branch_id = ?,
       town_id = ?,
+      percent = ?,
       updated_at = NOW()
     WHERE id = ?
     RETURNING *;
@@ -176,13 +181,14 @@ const selectAdminFilter = async (from, to) => {
   }
 };
 
-const createAdmin = async (branch_id, login, password) => {
+const createAdmin = async (branch_id, percent, login, password) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const res = await knex.raw(createAdminQuery, [
       branch_id,
       login,
       hashedPassword,
+      percent,
     ]);
     return res.rows;
   } catch (e) {
@@ -191,11 +197,12 @@ const createAdmin = async (branch_id, login, password) => {
   }
 };
 
-const updateAdmin = async (id, brach_id /* login, password */) => {
+const updateAdmin = async (id, brach_id /* login, password */, percent) => {
   try {
     /*     const hashedPassword = await bcrypt.hash(password, 10);
      */ const res = await knex.raw(updateAdminQuery, [
       brach_id,
+      percent,
       /*   login,
       hashedPassword, */
       id,
@@ -213,6 +220,7 @@ const createOperator = async (
   admin_id,
   login,
   password,
+  percent,
   shifts // [1, 2, 3]
 ) => {
   try {
@@ -224,6 +232,7 @@ const createOperator = async (
       town_id,
       login,
       hashedPassword,
+      percent,
     ]);
 
     const operator = res.rows[0];
@@ -247,15 +256,22 @@ const createOperator = async (
   }
 };
 
-const updateOperator = async (id, branch_id, town_id /* login, password */) => {
+const updateOperator = async (
+  id,
+  branch_id,
+  town_id /* login, password */,
+  percent
+) => {
   try {
     /*     const hashedPassword = await bcrypt.hash(password, 10);
      */
     const res = await knex.raw(updateOperatorQuery, [
       branch_id,
       town_id,
+
       /*  login,
       hashedPassword, */
+      percent,
       id,
     ]);
     return res.rows;

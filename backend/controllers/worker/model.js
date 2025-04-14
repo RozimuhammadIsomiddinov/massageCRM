@@ -39,9 +39,10 @@ const createWorkerQuery = `
             operator_id,
             town_id,
             name,
+            percent,
             created_at
         )
-        VALUES(?,?,?,?,NOW())
+        VALUES(?,?,?,?,?,NOW())
         RETURNING *;
 `;
 
@@ -52,6 +53,7 @@ const updateWorkerQuery = `
           operator_id = ?,
           town_id = ?,
           name = ?,
+          percent = ?,
           updated_at = NOW()
     WHERE id = ?
     RETURNING *;
@@ -76,6 +78,7 @@ const createWorker = async (data) => {
       data.operator_id,
       data.town_id,
       data.name,
+      data.percent,
     ]);
     return res.rows;
   } catch (e) {
@@ -91,6 +94,7 @@ const updateWorker = async (data, id) => {
       data.operator_id,
       data.town_id,
       data.name,
+      data.percent,
       id,
     ]);
     return res.rows;

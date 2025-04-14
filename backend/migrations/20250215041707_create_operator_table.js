@@ -7,6 +7,7 @@ exports.up = function (knex) {
       branch_id INTEGER REFERENCES branch(id) ON DELETE CASCADE,
       login VARCHAR(255),
       password VARCHAR(255),
+      percent NUBERIC(10,2),
       role VARCHAR(20) DEFAULT 'operator',
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
