@@ -7,8 +7,39 @@ const {
   balanceOperatorCont,
   selectMainCont,
 } = require("../controllers/operators/operator");
+const {
+  selectOperatorFilterCont,
+} = require("../controllers/super_admin/super_admin");
 
 const router = express.Router();
+/**
+ * @swagger
+ * /operator/flat:
+ *   post:
+ *     tags: [Operators]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - from
+ *               - to
+ *             properties:
+ *               from:
+ *                 type: string
+ *                 format: date-time
+ *               to:
+ *                 type: string
+ *                 format: date-time
+ *     responses:
+ *       200:
+ *         description: flat
+ *       500:
+ *         description: Server error
+ */
+
 /**
  * @swagger
  * tags:
@@ -128,7 +159,7 @@ const router = express.Router();
  *       500:
  *         description: Server error while fetching daily amount
  */
-
+router.post("/flat", selectOperatorFilterCont);
 router.get("/main", /*, auth("operator")*/ selectMainCont);
 router.get("/balance/:id", /*, auth("operator")*/ balanceOperatorCont);
 router.get("/daily", /*, auth("operator")*/ dailyAmountCont);
