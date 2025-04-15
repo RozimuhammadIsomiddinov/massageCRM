@@ -12,6 +12,7 @@ exports.up = function (knex) {
     operator_id INTEGER REFERENCES operator(id) ON DELETE CASCADE,
     cost INTEGER,
     category VARCHAR(255),
+    description VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
