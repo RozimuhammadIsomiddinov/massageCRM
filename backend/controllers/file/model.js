@@ -7,15 +7,17 @@ const selectFileQuery = `
 const createFileQuery = `
     INSERT INTO file(
     offer_id,
-    file
+    file,
+    description
     )
-    VALUES (?,?)
+    VALUES (?,?,?)
     RETURNING *;
 `;
 
 const updateFileQUery = `
         UPDATE file
         SET
+            description = ?,
             file = ?,
             updated_at = NOW()
         WHERE id = ?
@@ -32,9 +34,9 @@ const selectFile = async (id) => {
   }
 };
 
-const createFile = async (offer_id, file) => {
+const createFile = async (offer_id, file, description) => {
   try {
-    const res = await knex.raw(createFileQuery, [offer_id, file]);
+    const res = await knex.raw(createFileQuery, [offer_id, file, description]);
 
     return res.rows;
   } catch (e) {
@@ -43,9 +45,9 @@ const createFile = async (offer_id, file) => {
   }
 };
 
-const updateFile = async (id, file) => {
+const updateFile = async (id, file, description) => {
   try {
-    const res = await knex.raw(updateFileQUery, [file, id]);
+    const res = await knex.raw(updateFileQUery, [description, file, id]);
     return res.rows;
   } catch (e) {
     console.log("error from updateFile\t" + e.message);

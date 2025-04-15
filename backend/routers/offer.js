@@ -179,10 +179,15 @@ const router = express.Router();
  *         multipart/form-data:
  *           schema:
  *             type: object
+ *             required:
+ *               - file
  *             properties:
  *               file:
  *                 type: string
  *                 format: binary
+ *               description:
+ *                 type: string
+ *                 example: "created"
  *     responses:
  *       201:
  *         description: File uploaded successfully
@@ -211,10 +216,15 @@ const router = express.Router();
  *         multipart/form-data:
  *           schema:
  *             type: object
+ *             required:
+ *               - file
  *             properties:
  *               file:
  *                 type: string
  *                 format: binary
+ *               description:
+ *                 type: string
+ *                 example: "Updated"
  *     responses:
  *       200:
  *         description: File updated successfully

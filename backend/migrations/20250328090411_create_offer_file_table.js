@@ -8,6 +8,7 @@ exports.up = function (knex) {
         id SERIAL PRIMARY KEY,
         offer_id INTEGER REFERENCES offer(id) ON DELETE CASCADE,
         file VARCHAR(255),
+        description VARCHAR(255)
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
