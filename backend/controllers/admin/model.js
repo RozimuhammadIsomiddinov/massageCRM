@@ -125,7 +125,7 @@ LEFT JOIN worker AS w ON w.operator_id = o.id
 LEFT JOIN offer ON o.id = offer.operator_id
 LEFT JOIN town ON town.id = o.town_id
 LEFT JOIN spend ON spend.operator_id = o.id
-GROUP BY o.id, o.login, b.name, town_name
+GROUP BY o.id, o.login, b.name, town_name, o.percent, w.percent
 ORDER BY o.id ASC;
 `;
 
