@@ -62,7 +62,7 @@ const archiveQuery = `
     o.login,
     offer.is_cancelled AS status,
     DATE_TRUNC('month', offer.created_at) AS month,
-    COALESCE(SUM(offer.cost) * o.percent *0.01, 0) AS income,
+    COALESCE(SUM(offer.cost), 0)*o.percent *0.01 AS income,
     COALESCE(
         SUM(EXTRACT(EPOCH FROM (offer.end_time - offer.start_time))), 
         0
@@ -116,9 +116,9 @@ SELECT
     COALESCE(SUM(offer.cost), 0) AS total_amount,
     COALESCE(SUM(offer.cost), 0) - COALESCE(SUM(spend.cost), 0) AS without_spend,
     COALESCE(SUM(offer.cost), 0) - COALESCE(SUM(spend.cost), 0) *(o.percent + w.percent)*0.01  AS payment,
-    COALESCE(SUM(offer.cost), 0) + 0.05 AS cash, --o'zgartirish kerak
+    COALESCE(SUM(offer.cost), 0), --o'zgartirish kerak
     COALESCE(SUM(offer.cost), 0) + 0.05 - 0.05 AS result, --o'zgartirish kerak
-    COALESCE(SUM(offer.cost), 0) * o.percent AS operator_part
+    COALESCE(SUM(offer.cost), 0) * o.percent-0.01 AS operator_part
 FROM operator AS o
 LEFT JOIN branch AS b ON o.branch_id = b.id
 LEFT JOIN worker AS w ON w.operator_id = o.id

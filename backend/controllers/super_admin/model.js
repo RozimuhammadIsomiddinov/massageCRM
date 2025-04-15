@@ -84,10 +84,10 @@ const selectOperatorFilterQuery = `
     COALESCE(SUM(offer.end_time - offer.start_time), INTERVAL '0') AS working_time,
     COALESCE(SUM(offer.cost), 0) AS total_amount,
     COALESCE(SUM(offer.cost), 0) - COALESCE(SUM(spend.cost), 0) AS without_spend,
-    COALESCE(SUM(offer.cost), 0) - COALESCE(SUM(spend.cost), 0) *(w.percent + o.percent)*0.01 AS payment,
-    COALESCE(SUM(offer.cost), 0) + o.percent AS cash,
-    COALESCE(SUM(offer.cost), 0) +o.percent - w.percent AS result,
-    COALESCE(SUM(offer.cost), 0) * o.percent AS operator_part
+    (COALESCE(SUM(offer.cost), 0) - COALESCE(SUM(spend.cost), 0)) *(w.percent + o.percent)*0.01 AS payment,
+    COALESCE(SUM(offer.cost), 0)*o.percent-0.01 AS cash,
+    (COALESCE(SUM(offer.cost), 0))*(o.percent - w.percent)*0.01 AS result,
+    COALESCE(SUM(offer.cost), 0) * o.percent*0.01 AS operator_part
 FROM operator AS o
 LEFT JOIN branch AS b ON o.branch_id = b.id
 LEFT JOIN worker AS w ON w.operator_id = o.id

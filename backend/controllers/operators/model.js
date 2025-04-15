@@ -18,7 +18,7 @@ const selectMainQuery = `
     b.name AS branch_name,
     of.client_name,
     of.is_cancelled,
-    of.cost * o.percent AS operator_part,
+    of.cost * o.percent *0.01 AS operator_part,
     s.start_time,
     s.end_time
     FROM operator AS o
