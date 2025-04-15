@@ -21,7 +21,8 @@ SELECT
     a.login AS admin_name,
     w.name AS worker_name,
     t.name AS town_name,
-    o.login AS operator_name
+    o.login AS operator_name,
+    s.created_at
     FROM spend AS s
     LEFT JOIN admin AS a ON s.admin_id = a.id
     LEFT JOIN worker AS w ON s.worker_id = w.id
@@ -29,7 +30,7 @@ SELECT
     LEFT JOIN operator AS o ON s.operator_id = o.id 
     WHERE s.created_at >= ?  
     AND s.created_at <= ? 
-    GROUP BY s.id, s.cost, admin_name, worker_name, town_name, operator_name;
+    GROUP BY s.id, s.cost, admin_name, worker_name, town_name, operator_name, s.created_at;
 `;
 
 const filterSpend = async (from, to) => {
