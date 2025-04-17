@@ -22,10 +22,11 @@ const createSuperAdminQuery = `
 `;
 const selectAdminFilterQuery = `
        SELECT 
+      admin.percent,
       b.id AS branch_id,
-      admin.login AS admin_name,
       admin.id AS admin_id,
       b.name AS branch_name,
+      admin.login AS admin_name,
       COALESCE(SUM(EXTRACT(EPOCH FROM (s.end_time - s.start_time))), 0) AS total_working_hours,
       COALESCE(SUM(offer.cost), 0) AS income,
       (COALESCE(SUM(offer.cost), 0)) *admin.percent*0.01 AS salary
