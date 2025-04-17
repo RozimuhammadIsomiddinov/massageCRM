@@ -79,6 +79,7 @@ const selectOperatorFilterQuery = `
   SELECT 
     o.id,
     o.login,
+    o.percent,
     b.name AS branch_name,
     town.name AS town_name,
     COALESCE(SUM(offer.end_time - offer.start_time), INTERVAL '0') AS working_time,
