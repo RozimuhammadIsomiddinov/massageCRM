@@ -5,8 +5,71 @@ const {
   updateWorker,
   deleteWorker,
   selectAllWorker,
+  resultWork,
+  percentResult,
 } = require("./model");
 
+const resultWorkCont = async (req, res) => {
+  const { worker_id } = req.params;
+
+  if (!worker_id) {
+    return res.status(400).json({ message: "worker_id is required" });
+  }
+
+  try {
+    const result = await resultWork(worker_id);
+    return res.status(200).json(result);
+  } catch (e) {
+    console.error("Error from resultWorkCont:", e.message);
+    return res
+      .status(500)
+      .json({ message: "error from resultWorkCont", error: e.message });
+  }
+};
+
+const percentResultCont = async (req, res) => {
+  const {
+    admin_id,
+    worker_id,
+    town_id,
+    offer_id,
+    operator_id,
+    cost,
+    percent_worker,
+    description,
+  } = req.body;
+
+  if (
+    !admin_id ||
+    !worker_id ||
+    !town_id ||
+    !offer_id ||
+    !operator_id ||
+    !cost ||
+    !percent_worker
+  ) {
+    return res.status(400).json({ message: "fill all required fields" });
+  }
+
+  try {
+    const result = await percentResult({
+      admin_id,
+      worker_id,
+      town_id,
+      offer_id,
+      operator_id,
+      cost,
+      percent_worker,
+      description: description || "",
+    });
+    return res.status(201).json(result);
+  } catch (e) {
+    console.error("Error from percentResultCont:", e.message);
+    return res
+      .status(500)
+      .json({ message: "error from percentResultCont", error: e.message });
+  }
+};
 const selectAllWorkerCont = async (req, res) => {
   try {
     const result = await selectAllWorker();
@@ -94,6 +157,8 @@ const deleteWorkerCont = async (req, res) => {
 module.exports = {
   selectAllWorkerCont,
   createWorkerCont,
+  percentResultCont,
+  resultWorkCont,
   updateWorkerCont,
   deleteWorkerCont,
 };

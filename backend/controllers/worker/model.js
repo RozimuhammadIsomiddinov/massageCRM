@@ -63,6 +63,85 @@ const deleteWorkerQuery = `
     DELETE FROM worker WHERE id = ? RETURNING *;
 `;
 
+const resultWorkQuery = `
+      SELECT
+      o.id AS offer_id,
+      o.start_time,
+      o.end_time,
+      o.cost,
+      admin.login AS admin_name,
+      o.admin_id,
+      o.operator_id,
+      operator.login AS operator_name,
+      o.client_name,
+      o.is_cancelled,
+      o.prolongation,
+      o.created_at,
+      o.town_id,
+      town.name AS town_name
+    FROM offer AS o
+    LEFT JOIN admin ON admin.id = o.admin_id
+    LEFT JOIN operator ON operator.id = o.operator_id
+    LEFT JOIN town ON town.id = o.town_id
+    WHERE worker_id = ?;
+`;
+
+const percentResultQUery = `
+INSERT INTO result(
+    admin_id,
+    worker_id,
+    town_id,
+    operator_id,
+    offer_id,
+    cost,
+    percent_worker,
+    description
+)
+VALUES (?,?,?,?,?,?,?,?)
+RETURNING *;
+
+`;
+const resultWork = async (workerId) => {
+  try {
+    const res = await knex.raw(resultWorkQuery, [workerId]);
+    return res.rows;
+  } catch (error) {
+    console.error("Error fetching resultWork:", error);
+    throw error;
+  }
+};
+const percentResult = async (data) => {
+  const {
+    admin_id,
+    worker_id,
+    town_id,
+    offer_id,
+    operator_id,
+    cost,
+    percent_worker,
+    description,
+  } = data;
+
+  const percent_1 = cost * percent_worker * 0.01;
+
+  try {
+    const res = await knex.raw(percentResultQUery, [
+      admin_id,
+      worker_id,
+      town_id,
+      operator_id,
+      offer_id,
+      percent_1,
+      percent_worker, // percent_worker ustuniga
+      description || "",
+    ]);
+    return res.rows[0];
+  } catch (error) {
+    console.error("Error inserting percentResult:", error);
+    throw error;
+  }
+};
+
 const selectAllWorker = async () => {
   try {
     const res = await knex.raw(selectAllWorkerQuery);
@@ -114,4 +193,11 @@ const deleteWorker = async (id) => {
     throw e;
   }
 };
-module.exports = { selectAllWorker, createWorker, updateWorker, deleteWorker };
+module.exports = {
+  percentResult,
+  resultWork,
+  selectAllWorker,
+  createWorker,
+  updateWorker,
+  deleteWorker,
+};

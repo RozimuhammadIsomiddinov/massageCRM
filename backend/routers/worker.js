@@ -4,6 +4,8 @@ const {
   updateWorkerCont,
   deleteWorkerCont,
   selectAllWorkerCont,
+  resultWorkCont,
+  percentResultCont,
 } = require("../controllers/worker/worker");
 const auth = require("../middleware/auth");
 const router = express.Router();
@@ -148,7 +150,142 @@ const router = express.Router();
  *         description: Server xatosi
  */
 
+/**
+ * @swagger
+ * /worker/result/{worker_id}:
+ *   get:
+ *     summary: Workerning barcha ish natijalarini olish
+ *     tags: [Worker]
+ *     parameters:
+ *       - in: path
+ *         name: worker_id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: Worker ID
+ *     responses:
+ *       200:
+ *         description: Workerga tegishli barcha offerlar ro'yxati
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   start_time:
+ *                     type: string
+ *                   end_time:
+ *                     type: string
+ *                   cost:
+ *                     type: number
+ *                   admin_name:
+ *                     type: string
+ *                   admin_id:
+ *                     type: integer
+ *                   operator_id:
+ *                     type: integer
+ *                   operator_name:
+ *                     type: string
+ *                   client_name:
+ *                     type: string
+ *                   is_cancelled:
+ *                     type: boolean
+ *                   prolongation:
+ *                     type: boolean
+ *                   created_at:
+ *                     type: string
+ *                   town_id:
+ *                     type: integer
+ *                   town_name:
+ *                     type: string
+ *       400:
+ *         description: Worker ID kiritilmagan
+ *       500:
+ *         description: Server xatosi
+ */
+
+/**
+ * @swagger
+ * /worker/result:
+ *   post:
+ *     summary: Worker uchun natijani (foiz, pul va description) saqlash
+ *     tags: [Worker]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - admin_id
+ *               - worker_id
+ *               - town_id
+ *               - operator_id
+ *               - cost
+ *               - percent_worker
+ *             properties:
+ *               admin_id:
+ *                 type: integer
+ *                 example: 1
+ *               worker_id:
+ *                 type: integer
+ *                 example: 2
+ *               town_id:
+ *                 type: integer
+ *                 example: 3
+ *               offer_id:
+ *                 type: integer
+ *                 example: 3
+ *               operator_id:
+ *                 type: integer
+ *                 example: 4
+ *               cost:
+ *                 type: number
+ *                 example: 50000
+ *               percent_worker:
+ *                 type: number
+ *                 example: 20
+ *               description:
+ *                 type: string
+ *                 example: "Bonus uchun maxsus ish"
+ *     responses:
+ *       201:
+ *         description: Result muvaffaqiyatli saqlandi
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                 admin_id:
+ *                   type: integer
+ *                 worker_id:
+ *                   type: integer
+ *                 town_id:
+ *                   type: integer
+ *                 operator_id:
+ *                   type: integer
+ *                 cost:
+ *                   type: number
+ *                 percent_worker:
+ *                   type: number
+ *                 description:
+ *                   type: string
+ *                 created_at:
+ *                   type: string
+ *       400:
+ *         description: Kerakli ma'lumotlar to‘liq emas
+ *       500:
+ *         description: Server xatosi
+ */
+
 router.get("/", selectAllWorkerCont);
+router.get("/result/:worker_id", resultWorkCont);
+router.post("/result", percentResultCont);
 router.post("/create", /*, auth("operator")*/ createWorkerCont);
 router.put("/update/:id", /*, auth("operator")*/ updateWorkerCont);
 router.delete("/delete/:id", /*, auth("operator")*/ deleteWorkerCont);
