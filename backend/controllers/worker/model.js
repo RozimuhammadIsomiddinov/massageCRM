@@ -101,6 +101,34 @@ VALUES (?,?,?,?,?,?,?,?)
 RETURNING *;
 
 `;
+
+const selectResultQuery = `
+    SELECT 
+    r.id AS result_id,
+    r.cost,
+    r.percent_worker,
+    r.description,
+    admin.login AS admin_name,
+    operator.login AS operator_name,
+    worker.name AS worker_name,
+    town.name AS town_name,
+    r.offer_id
+    FROM result AS r 
+    JOIN admin ON admin.id = r.admin_id
+    JOIN operator ON operator.id = r.operator_id
+    JOIN worker ON worker.id = r.worker_id
+    JOIN town ON town.id = r.town_id;
+    ;
+`;
+const selectResult = async () => {
+  try {
+    const res = await knex.raw(selectResultQuery);
+    return res.rows;
+  } catch (error) {
+    console.error("Error fetching selectResult:", error);
+    throw error;
+  }
+};
 const resultWork = async (workerId) => {
   try {
     const res = await knex.raw(resultWorkQuery, [workerId]);
@@ -141,7 +169,6 @@ const percentResult = async (data) => {
     throw error;
   }
 };
-
 const selectAllWorker = async () => {
   try {
     const res = await knex.raw(selectAllWorkerQuery);
@@ -195,6 +222,7 @@ const deleteWorker = async (id) => {
 };
 module.exports = {
   percentResult,
+  selectResult,
   resultWork,
   selectAllWorker,
   createWorker,

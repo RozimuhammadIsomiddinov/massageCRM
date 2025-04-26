@@ -7,8 +7,19 @@ const {
   selectAllWorker,
   resultWork,
   percentResult,
+  selectResult,
 } = require("./model");
 
+const selectResultCont = async (req, res) => {
+  try {
+    const result = await selectResult();
+    return res.status(200).json(result);
+  } catch (e) {
+    return res
+      .status(500)
+      .json({ message: "error from selectResultCont", error: e.message });
+  }
+};
 const resultWorkCont = async (req, res) => {
   const { worker_id } = req.params;
 
@@ -158,6 +169,7 @@ module.exports = {
   selectAllWorkerCont,
   createWorkerCont,
   percentResultCont,
+  selectResultCont,
   resultWorkCont,
   updateWorkerCont,
   deleteWorkerCont,

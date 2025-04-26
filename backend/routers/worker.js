@@ -6,6 +6,7 @@ const {
   selectAllWorkerCont,
   resultWorkCont,
   percentResultCont,
+  selectResultCont,
 } = require("../controllers/worker/worker");
 const auth = require("../middleware/auth");
 const router = express.Router();
@@ -284,6 +285,7 @@ const router = express.Router();
  */
 
 router.get("/", selectAllWorkerCont);
+router.get("/result", selectResultCont);
 router.get("/result/:worker_id", resultWorkCont);
 router.post("/result", percentResultCont);
 router.post("/create", /*, auth("operator")*/ createWorkerCont);
