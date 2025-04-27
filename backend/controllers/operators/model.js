@@ -27,9 +27,6 @@ const selectMainQuery = `
     LEFT JOIN offer AS of ON of.operator_id = o.id
     LEFT JOIN operator_shift AS os ON os.operator_id = o.id
     LEFT JOIN shift AS s ON s.id = os.shift_id
-    ORDER BY 
-        of.id,
-        w.id NULLS LAST,
         of.prolongation DESC;
     `;
 
