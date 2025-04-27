@@ -27,9 +27,7 @@ LEFT JOIN branch AS b ON b.id = o.branch_id
 LEFT JOIN offer AS of ON of.operator_id = o.id
 LEFT JOIN operator_shift AS os ON os.operator_id = o.id
 LEFT JOIN shift AS s ON s.id = os.shift_id
-ORDER BY 
-    (of.prolongation IS NULL), 
-    of.prolongation DESC
+ORDER BY of.prolongation DESC NULLS LAST;
 
     `;
 
