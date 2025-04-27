@@ -6,7 +6,7 @@ const selectByIDQuery = `
 `;
 
 const selectMainQuery = `
-    SELECT 
+   SELECT 
     o.id,
     o.login,
     of.id AS offer_id,
@@ -18,16 +18,18 @@ const selectMainQuery = `
     b.name AS branch_name,
     of.client_name,
     of.is_cancelled,
-    of.cost * o.percent *0.01 AS operator_part,
+    of.cost * o.percent * 0.01 AS operator_part,
     s.start_time,
     s.end_time
-    FROM operator AS o
-    LEFT JOIN worker AS w ON w.operator_id = o.id
-    LEFT JOIN branch AS b ON b.id = o.branch_id
-    LEFT JOIN offer AS of ON of.operator_id = o.id
-    LEFT JOIN operator_shift AS os ON os.operator_id = o.id
-    LEFT JOIN shift AS s ON s.id = os.shift_id
-        of.prolongation DESC;
+FROM operator AS o
+LEFT JOIN worker AS w ON w.operator_id = o.id
+LEFT JOIN branch AS b ON b.id = o.branch_id
+LEFT JOIN offer AS of ON of.operator_id = o.id
+LEFT JOIN operator_shift AS os ON os.operator_id = o.id
+LEFT JOIN shift AS s ON s.id = os.shift_id
+ORDER BY 
+    of.prolongation DESC;
+
     `;
 
 const selectBy = `
